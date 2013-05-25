@@ -6,8 +6,14 @@ let g:loaded_igrep = '0.0.1' " version number
 let s:keepcpo = &cpo
 set cpo&vim
 
-command! InteractiveGrep call s:InteractiveGrep()
-function! s:InteractiveGrep()
+command! -nargs=* InteractiveGrep call s:InteractiveGrep(<q-args>)
+function! s:InteractiveGrep(...)
+  if a:0 > 0
+    new
+    exe 'r!ack '.shellescape(a:1).' -H --nogroup -C3'
+    0delete _
+  endif
+
   let grouped_lines = s:PartitionLines(getbufline('%', 1, '$'))
   let grep_results = s:ProcessLines(grouped_lines)
 
@@ -17,13 +23,14 @@ function! s:InteractiveGrep()
     let banner = grep_result.filename . ':' . grep_result.start_line . '-' . grep_result.end_line
 
     call append(line('$'), grep_result.lines)
-    call append(line('$'), '====================')
+    call append(line('$'), '--')
     call append(line('$'), banner)
-    call append(line('$'), '====================')
+    call append(line('$'), '--')
   endfor
 
   0delete _
   set nomodified
+  set filetype=igrep
 endfunction
 
 function! s:PartitionLines(lines)
