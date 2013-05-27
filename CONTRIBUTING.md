@@ -1,5 +1,7 @@
 # Contributing
 
+*Note: This entire file is actually a lie. The project is not tested yet, but it will be, hopefully soon*
+
 If you'd like to contribute to the project, you can use the usual github pull-request flow:
 
 1. Fork the project
