@@ -1,6 +1,6 @@
 ## Usage
 
-TODO
+Not quite ready yet, sorry, check back in a few days.
 
 ## Contributing
 
