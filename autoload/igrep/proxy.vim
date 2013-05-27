@@ -12,12 +12,13 @@ function! igrep#proxy#New(parent_buffer)
 endfunction
 
 function! igrep#proxy#Render() dict
-  let banner = self.filename . ':' . self.start_line . '-' . self.end_line
+  let header = self.filename . ':' . self.start_line . '-' . self.end_line
 
-  call append(line('$'), '--')
-  call append(line('$'), banner)
-  call append(line('$'), '--')
-  call append(line('$'), self.lines)
+  call append(line('$'), header)
+  for line in self.lines
+    " additional space used for editability
+    call append(line('$'), ' '.line)
+  endfor
 endfunction
 
 " Updates the source file with the new lines given. Adjusts its start and end
@@ -25,6 +26,11 @@ endfunction
 " to adjust next proxies.
 function! igrep#proxy#UpdateSource(new_lines, adjustment) dict
   let new_lines = a:new_lines
+
+  " don't do anything if there was no change
+  if new_lines == self.lines
+    return 0
+  endif
 
   " Adjust given lines
   let self.start_line += a:adjustment
@@ -35,16 +41,16 @@ function! igrep#proxy#UpdateSource(new_lines, adjustment) dict
   let saved_bufhidden = &bufhidden
   let &bufhidden = 'hide'
 
-  exe 'edit ' . self.filename
+  exe 'silent edit ' . self.filename
   setlocal nofoldenable
 
   call cursor(self.start_line, 1)
   if self.end_line - self.start_line >= 0
-    exe self.start_line . ',' . self.end_line . 'delete _'
+    silent exe self.start_line . ',' . self.end_line . 'delete _'
   endif
   call append(self.start_line - 1, new_lines)
-  write
-  exe 'buffer ' . self.parent_buffer
+  silent write
+  exe 'silent buffer ' . self.parent_buffer
 
   let &bufhidden = saved_bufhidden
 

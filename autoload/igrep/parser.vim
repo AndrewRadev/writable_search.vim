@@ -42,8 +42,7 @@ function! s:BuildProxies(grouped_lines)
         echoerr "Unexpected format of line: ".line
       endif
 
-      " additional space used for editability
-      call add(current_proxy.lines, ' '.body)
+      call add(current_proxy.lines, body)
       call add(line_numbers, line_number)
     endfor
 
