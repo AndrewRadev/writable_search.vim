@@ -1,4 +1,4 @@
-function! igrep#proxy#New(parent_buffer)
+function! writable_search#proxy#New(parent_buffer)
   return {
         \ 'parent_buffer': a:parent_buffer,
         \ 'filename':      '',
@@ -6,12 +6,12 @@ function! igrep#proxy#New(parent_buffer)
         \ 'start_line':    -1,
         \ 'end_line':      -1,
         \
-        \ 'Render':       function('igrep#proxy#Render'),
-        \ 'UpdateSource': function('igrep#proxy#UpdateSource'),
+        \ 'Render':       function('writable_search#proxy#Render'),
+        \ 'UpdateSource': function('writable_search#proxy#UpdateSource'),
         \ }
 endfunction
 
-function! igrep#proxy#Render() dict
+function! writable_search#proxy#Render() dict
   let header = self.filename . ':' . self.start_line . '-' . self.end_line
 
   call append(line('$'), header)
@@ -24,7 +24,7 @@ endfunction
 " Updates the source file with the new lines given. Adjusts its start and end
 " points by the given a:adjustment. Returns the difference in lines in order
 " to adjust next proxies.
-function! igrep#proxy#UpdateSource(new_lines, adjustment) dict
+function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
   let new_lines = a:new_lines
 
   " don't do anything if there was no change

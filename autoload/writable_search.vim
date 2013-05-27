@@ -1,4 +1,4 @@
-function! igrep#Start(...)
+function! writable_search#Start(...)
   if a:0 > 0
     if expand('%') != ''
       " TODO (2013-05-26) customizable "new" command
@@ -9,15 +9,15 @@ function! igrep#Start(...)
     let @/ = a:1
   endif
 
-  let b:proxies = igrep#parser#Run()
+  let b:proxies = writable_search#parser#Run()
 
-  call igrep#Render()
+  call writable_search#Render()
 
   set nomodified
-  set filetype=igrep
+  set filetype=writable_search
 endfunction
 
-function! igrep#Rerun(...)
+function! writable_search#Rerun(...)
   if a:0 > 0
     let b:rerun_args = a:1
 
@@ -26,12 +26,12 @@ function! igrep#Rerun(...)
     0delete _
   endif
 
-  call igrep#Start()
+  call writable_search#Start()
 endfunction
 
-function! igrep#Update()
+function! writable_search#Update()
   try
-    call igrep#cursor#Push()
+    call writable_search#cursor#Push()
     normal! gg
 
     let header_pattern   = '^\S.*$'
@@ -106,11 +106,11 @@ function! igrep#Update()
 
     setlocal nomodified
   finally
-    call igrep#cursor#Pop()
+    call writable_search#cursor#Pop()
   endtry
 endfunction
 
-function! igrep#Render()
+function! writable_search#Render()
   %delete _
   for proxy in b:proxies
     call proxy.Render()
@@ -118,12 +118,12 @@ function! igrep#Render()
   0delete _
 endfunction
 
-function! igrep#ProxyUnderCursor()
+function! writable_search#ProxyUnderCursor()
   let cursor_lineno    = line('.')
   let header_pattern   = '^\S.*$'
   let last_proxy_index = -1
 
-  call igrep#cursor#Push()
+  call writable_search#cursor#Push()
   exe 1
 
   let header_lineno = search(header_pattern, 'Wc')
@@ -137,7 +137,7 @@ function! igrep#ProxyUnderCursor()
     let header_lineno = search(header_pattern, 'Wc')
   endwhile
 
-  call igrep#cursor#Pop()
+  call writable_search#cursor#Pop()
 
   return b:proxies[last_proxy_index]
 endfunction

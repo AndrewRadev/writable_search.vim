@@ -4,14 +4,14 @@
 " afterwards easier, these functions implement a simple cursor stack. The
 " basic usage is:
 "
-"   call igrep#Push()
+"   call writable_search#Push()
 "   " Do stuff that move the cursor around
-"   call igrep#Pop()
+"   call writable_search#Pop()
 
-" function! igrep#Push() {{{2
+" function! writable_search#Push() {{{2
 "
 " Adds the current cursor position to the cursor stack.
-function! igrep#cursor#Push()
+function! writable_search#cursor#Push()
   if !exists('b:cursor_position_stack')
     let b:cursor_position_stack = []
   endif
@@ -19,11 +19,11 @@ function! igrep#cursor#Push()
   call add(b:cursor_position_stack, winsaveview())
 endfunction
 
-" function! igrep#Pop() {{{2
+" function! writable_search#Pop() {{{2
 "
 " Restores the cursor to the latest position in the cursor stack, as added
-" from the igrep#Push function. Removes the position from the stack.
-function! igrep#cursor#Pop()
+" from the writable_search#Push function. Removes the position from the stack.
+function! writable_search#cursor#Pop()
   if !exists('b:cursor_position_stack')
     let b:cursor_position_stack = []
   endif
@@ -31,10 +31,10 @@ function! igrep#cursor#Pop()
   call winrestview(remove(b:cursor_position_stack, -1))
 endfunction
 
-" function! igrep#Peek() {{{2
+" function! writable_search#Peek() {{{2
 "
 " Returns the last saved cursor position from the cursor stack.
 " Note that if the cursor hasn't been saved at all, this will raise an error.
-function! igrep#cursor#Peek()
+function! writable_search#cursor#Peek()
   return b:cursor_position_stack[-1]
 endfunction

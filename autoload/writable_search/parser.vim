@@ -1,4 +1,4 @@
-function! igrep#parser#Run()
+function! writable_search#parser#Run()
   let grouped_lines = s:PartitionLines(getbufline('%', 1, '$'))
   return s:BuildProxies(grouped_lines)
 endfunction

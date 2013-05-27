@@ -8,22 +8,22 @@ if exists('b:command')
     let shell_command .= ' '.b:rerun_args
   endif
 
-  exe 'silent file InteractiveGrep:\ '.fnameescape(shell_command)
+  exe 'silent file WritableSearch:\ '.fnameescape(shell_command)
 else
-  exe 'silent file InteractiveGrep'
+  exe 'silent file WritableSearch'
 endif
 
-command! -buffer -nargs=* Rerun call igrep#Rerun(<q-args>)
+command! -buffer -nargs=* Rerun call writable_search#Rerun(<q-args>)
 
-augroup igrep
+augroup writable_search
   autocmd!
 
-  autocmd BufWriteCmd <buffer> call igrep#Update()
+  autocmd BufWriteCmd <buffer> call writable_search#Update()
 augroup END
 
 nnoremap <buffer> <c-w>f :silent call <SID>OpenSource()<cr>
 function! s:OpenSource()
-  let proxy = igrep#ProxyUnderCursor()
+  let proxy = writable_search#ProxyUnderCursor()
   exe 'split '.proxy.filename
 
   " jump to middle of match
