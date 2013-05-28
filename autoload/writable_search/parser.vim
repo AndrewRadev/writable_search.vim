@@ -23,7 +23,7 @@ function! s:BuildProxies(grouped_lines)
   let proxies = []
 
   for lines in a:grouped_lines
-    let current_proxy          = igrep#proxy#New(bufnr('%'))
+    let current_proxy          = writable_search#proxy#New(bufnr('%'))
     let current_proxy.filename = s:FindFilename(lines)
     let line_numbers           = []
 
