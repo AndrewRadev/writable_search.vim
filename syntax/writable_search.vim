@@ -1,3 +1,3 @@
 syn match writableSearchBanner '^\S.*$'
 
-hi def link writableSearchBanner Identifier
+hi def link writableSearchBanner Underlined
