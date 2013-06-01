@@ -16,6 +16,11 @@ Vimrunner::RSpec.configure do |config|
       echo(%<join(getbufline('%', 1, '$'), "\n")>)
     end
 
+    def vim.set_buffer_contents(text)
+      command('%delete _')
+      echo(%<setline(1, split(#{text.inspect}, "\\n"))>)
+    end
+
     vim
   end
 end

@@ -8,6 +8,7 @@ function! writable_search#proxy#New(parent_buffer)
         \
         \ 'Render':       function('writable_search#proxy#Render'),
         \ 'UpdateSource': function('writable_search#proxy#UpdateSource'),
+        \ 'UpdateLocal':  function('writable_search#proxy#UpdateLocal'),
         \ }
 endfunction
 
@@ -63,4 +64,19 @@ function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
   let self.lines = new_lines " TODO (2013-05-26) Is self.lines necessary?
 
   return new_line_count - old_line_count
+endfunction
+
+function! writable_search#proxy#UpdateLocal() dict
+  " Switch to the source buffer and fetch the relevant lines.
+  let saved_bufhidden = &bufhidden
+  let &bufhidden = 'hide'
+
+  exe 'silent edit ' . self.filename
+  setlocal nofoldenable
+
+  let self.lines = getbufline('%', self.start_line, self.end_line)
+
+  exe 'silent buffer ' . self.parent_buffer
+
+  let &bufhidden = saved_bufhidden
 endfunction

@@ -86,6 +86,9 @@ function! writable_search#Update()
       endif
     endfor
 
+    " Keep a dictionary of changed line counts per filename
+    let deltas = {}
+
     " Perform actual update
     for proxy_update in proxy_updates
       let proxy = proxy_update.proxy
@@ -96,15 +99,20 @@ function! writable_search#Update()
         call add(new_lines, line[1:])
       endfor
 
-      " TODO (2013-05-26) adjustment should be != 0 only for results in the
-      " same file.
-      call proxy.UpdateSource(new_lines, 0)
+      if !has_key(deltas, proxy.filename)
+        let deltas[proxy.filename] = 0
+      endif
+      let deltas[proxy.filename] += proxy.UpdateSource(new_lines, deltas[proxy.filename])
 
       let proxy.start_line = proxy_update.start_line
       let proxy.end_line   = proxy_update.end_line
+
+      call proxy.UpdateLocal()
     endfor
 
-    setlocal nomodified
+    " Re-render to make changes visible
+    call writable_search#Render()
+    set nomodified
   finally
     call writable_search#cursor#Pop()
   endtry
