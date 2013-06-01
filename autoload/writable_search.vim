@@ -5,7 +5,7 @@ function! writable_search#Start(...)
       new
     endif
 
-    call s:Grep(a:1)
+    call s:Grep(a:1, a:000[1:])
     let @/ = a:1
   endif
 
@@ -143,8 +143,8 @@ function! writable_search#ProxyUnderCursor()
 endfunction
 
 " TODO (2013-05-26) customizable "ack" command
-function! s:Grep(query)
-  let b:command = 'r!ack '.shellescape(a:query).' -H --nogroup -C3'
+function! s:Grep(query, flags)
+  let b:command = 'r!ack '.shellescape(a:query).' -H --nogroup -C3 '.join(a:flags, ' ')
 
   %delete _
   exe b:command

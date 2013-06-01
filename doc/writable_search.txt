@@ -1,15 +1,16 @@
 ==============================================================================
-CONTENTS                                        *writable_search*   *writable_search-contents*
+CONTENTS                           *writable_search* *writable_search-contents*
 
     Installation................................: |writable_search-installation|
     Usage.......................................: |writable_search-usage|
+    Commands....................................: |writable_search-commands|
     Settings....................................: |writable_search-settings|
     Internals...................................: |writable_search-internals|
     Issues......................................: |writable_search-issues|
 
 
 ==============================================================================
-INSTALLATION                                            *writable_search-installation*
+INSTALLATION                                     *writable_search-installation*
 
 There are several ways to install the plugin. The recommended one is by using
 Tim Pope's pathogen (http://www.vim.org/scripts/script.php?script_id=2332). In
@@ -25,28 +26,48 @@ The command is (provided you're in ~/.vim):
 <
 
 Another way is to simply copy all the essential directories inside the ~/.vim
-directory: TODO list of directories
+directory: autoload, doc, ftplugin, plugin, syntax.
 
 
 ==============================================================================
-USAGE                                                          *writable_search-usage*
+USAGE                                                   *writable_search-usage*
+
+The plugin exposes the command |WritableSearch|, which takes an argument and
+some optional command-line flags, and performs a grep (or ack, or any other
+search command), with the given parameters. For example:
+>
+    :WritableSearch function_call\( -C5
+<
+The results are opened in a new window, and are very similar to what you would
+get from performing the search on the command-line. The difference is that you
+can now edit this buffer and, upon writing, the original files will be updated
+with the changes. This gives you a very simple and straightforward
+search-and-replace process.
+
+The command :Rerun defined in the search buffer can be used to perform the
+search again, with different flags. For example:
+>
+    :WritableSearch function_call\( -C5
+    :Rerun -C1
+<
+==============================================================================
+COMMANDS                                             *writable_search-commands*
+
+
+
+==============================================================================
+SETTINGS                                             *writable_search-settings*
 
 TODO
 
 
 ==============================================================================
-SETTINGS                                                    *writable_search-settings*
-
-TODO
-
-
-==============================================================================
-INTERNALS                                                  *writable_search-internals*
+INTERNALS                                           *writable_search-internals*
 
 TODO
 
 ==============================================================================
-ISSUES                                                        *writable_search-issues*
+ISSUES                                                 *writable_search-issues*
 
 Any issues and suggestions are very welcome on the github bugtracker:
 https://github.com/AndrewRadev/writable_search.vim/issues

@@ -16,6 +16,8 @@ function! s:PartitionLines(lines)
     endif
   endfor
 
+  call add(groups, current_group)
+
   return groups
 endfunction
 
