@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Basic" do
+describe "Parsing" do
   it "parses grep results into a different representation" do
     write_file 'grep_results', <<-EOF
       autoload/writable_search/proxy.vim-26-" to adjust next proxies.
@@ -17,7 +17,7 @@ describe "Basic" do
 
     vim.edit 'grep_results'
     vim.command 'WritableSearch'
-    vim.echo(%<join(getbufline('%', 1, '$'), "\n")>).should eq normalize_string_indent(<<-EOF)
+    vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
       autoload/writable_search/proxy.vim:26-28
        " to adjust next proxies.
        function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict

@@ -11,6 +11,11 @@ Vimrunner::RSpec.configure do |config|
   config.start_vim do
     vim = Vimrunner.start
     vim.add_plugin(plugin_path, 'plugin/writable_search.vim')
+
+    def vim.buffer_contents
+      echo(%<join(getbufline('%', 1, '$'), "\n")>)
+    end
+
     vim
   end
 end

@@ -26,12 +26,13 @@ function! s:BuildProxies(grouped_lines)
 
   for lines in a:grouped_lines
     let current_proxy          = writable_search#proxy#New(bufnr('%'))
-    let current_proxy.filename = s:FindFilename(lines)
+    let raw_filename           = s:FindFilename(lines)
+    let current_proxy.filename = s:NormalizeFilename(raw_filename)
     let line_numbers           = []
 
     for line in lines
       " slice off the filename:
-      let line = line[len(current_proxy.filename) : len(line) - 1]
+      let line = line[len(raw_filename) : len(line) - 1]
 
       let matched_line_pattern     = '\v^:(\d+):(.*)$'
       let non_matched_line_pattern = '\v^-(\d+)-(.*)$'
@@ -65,4 +66,8 @@ function! s:FindFilename(lines)
       return matchstr(line, filename_pattern)
     endif
   endfor
+endfunction
+
+function! s:NormalizeFilename(filename)
+  return fnamemodify(a:filename, ':~:.')
 endfunction

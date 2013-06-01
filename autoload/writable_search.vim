@@ -142,9 +142,16 @@ function! writable_search#ProxyUnderCursor()
   return b:proxies[last_proxy_index]
 endfunction
 
-" TODO (2013-05-26) customizable "ack" command
 function! s:Grep(query, flags)
-  let b:command = 'r!ack '.shellescape(a:query).' -H --nogroup -C3 '.join(a:flags, ' ')
+  if g:writable_search_command_type == 'egrep'
+    let b:command = 'r!egrep '.shellescape(a:query).' . -R -n -H -C3 '.join(a:flags, ' ')
+  elseif g:writable_search_command_type == 'ack'
+    let b:command = 'r!ack '.shellescape(a:query).' -H --nogroup -C3 '.join(a:flags, ' ')
+  else
+    echoerr "Unknown value for g:writable_search_command_type:  "
+          \ .g:writable_search_command_type
+          \ .". Needs to be one of 'egrep', 'ack'"
+  endif
 
   %delete _
   exe b:command
