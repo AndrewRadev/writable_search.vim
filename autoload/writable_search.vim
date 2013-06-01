@@ -1,8 +1,7 @@
 function! writable_search#Start(...)
   if a:0 > 0
     if expand('%') != ''
-      " TODO (2013-05-26) customizable "new" command
-      new
+      call s:NewBuffer()
     endif
 
     call s:Grep(a:1, a:000[1:])
@@ -148,6 +147,10 @@ function! writable_search#ProxyUnderCursor()
   call writable_search#cursor#Pop()
 
   return b:proxies[last_proxy_index]
+endfunction
+
+function! s:NewBuffer()
+  exe g:writable_search_new_buffer_command
 endfunction
 
 function! s:Grep(query, flags)
