@@ -143,10 +143,16 @@ function! writable_search#ProxyUnderCursor()
 endfunction
 
 function! s:Grep(query, flags)
+  let egrep_command = 'r!egrep %s . -R -n -H -C3 %s'
+  let ack_command   = 'r!ack %s -H --nogroup -C3 %s'
+
+  let escaped_query = shellescape(a:query)
+  let flags         = join(a:flags, ' ')
+
   if g:writable_search_command_type == 'egrep'
-    let b:command = 'r!egrep '.shellescape(a:query).' . -R -n -H -C3 '.join(a:flags, ' ')
+    let b:command = printf(egrep_command, escaped_query, flags)
   elseif g:writable_search_command_type == 'ack'
-    let b:command = 'r!ack '.shellescape(a:query).' -H --nogroup -C3 '.join(a:flags, ' ')
+    let b:command = printf(ack_command, escaped_query, flags)
   else
     echoerr "Unknown value for g:writable_search_command_type:  "
           \ .g:writable_search_command_type
