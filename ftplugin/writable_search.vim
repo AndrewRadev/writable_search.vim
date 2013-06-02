@@ -1,5 +1,6 @@
 setlocal buftype=acwrite
 setlocal bufhidden=wipe
+setlocal autoindent
 
 if exists('b:command')
   let shell_command = b:command[2:] " strip off the initial r!
