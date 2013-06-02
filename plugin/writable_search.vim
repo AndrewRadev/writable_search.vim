@@ -14,6 +14,10 @@ if !exists('g:writable_search_new_buffer_command')
   let g:writable_search_new_buffer_command = 'tabnew'
 endif
 
+if !exists('g:writable_search_confirm_file_rename')
+  let g:writable_search_confirm_file_rename = 1
+endif
+
 command! -nargs=* WritableSearch call writable_search#Start(<f-args>)
 
 let &cpo = s:keepcpo

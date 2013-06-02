@@ -9,6 +9,7 @@ function! writable_search#proxy#New(parent_buffer)
         \ 'Render':       function('writable_search#proxy#Render'),
         \ 'UpdateSource': function('writable_search#proxy#UpdateSource'),
         \ 'UpdateLocal':  function('writable_search#proxy#UpdateLocal'),
+        \ 'RenameFile':   function('writable_search#proxy#RenameFile'),
         \ }
 endfunction
 
@@ -79,4 +80,12 @@ function! writable_search#proxy#UpdateLocal() dict
   exe 'silent buffer ' . self.parent_buffer
 
   let &bufhidden = saved_bufhidden
+endfunction
+
+function! writable_search#proxy#RenameFile(new_filename) dict
+  if rename(self.filename, a:new_filename) == 0
+    let self.filename = a:new_filename
+  else
+    echoerr printf('Couldn''t rename "%s" to "%s"', self.filename, a:new_filename)
+  endif
 endfunction

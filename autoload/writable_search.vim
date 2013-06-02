@@ -106,6 +106,16 @@ function! writable_search#Update()
       let proxy.start_line = proxy_update.start_line
       let proxy.end_line   = proxy_update.end_line
 
+      if proxy_update.filename != proxy.filename
+        if g:writable_search_confirm_file_rename
+          if confirm(printf('Rename "%s" to "%s"?', proxy.filename, proxy_update.filename))
+            call proxy.RenameFile(proxy_update.filename)
+          endif
+        else
+          call proxy.RenameFile(proxy_update.filename)
+        endif
+      endif
+
       call proxy.UpdateLocal()
     endfor
 
