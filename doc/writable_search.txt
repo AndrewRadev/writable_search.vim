@@ -32,11 +32,13 @@ directory: autoload, doc, ftplugin, plugin, syntax.
 ==============================================================================
 USAGE                                                   *writable_search-usage*
 
+                                                              *:WritableSearch*
+
 The plugin exposes the command |WritableSearch|, which takes an argument and
 some optional command-line flags, and performs a grep (or ack, or any other
 search command), with the given parameters. For example:
 >
-    :WritableSearch function_call\( -C5
+    :WritableSearch function_call\(
 <
 The results are opened in a new window, and are very similar to what you would
 get from performing the search on the command-line. The difference is that you
@@ -45,26 +47,81 @@ with the changes. This gives you a very simple and straightforward
 search-and-replace process.
 
 The command :Rerun defined in the search buffer can be used to perform the
-search again, with different flags. For example:
+search again, with additional flags. For example:
 >
-    :WritableSearch function_call\( -C5
+    :WritableSearch function_call\(
     :Rerun -C1
 <
-==============================================================================
-COMMANDS                                             *writable_search-commands*
-
-
+If the command |:WritableSearch| is used without any arguments, it assumes
+that an appropriate search has already been run and the results are in the
+current buffer. It tries to parse the contents of the buffer directly. This
+allows you to plug in your own, potentially complicated search expression, and
+have the plugin make it writable for you. However, the format must be the same
+as the output of grep with the options "-n/--line-number" and
+"-H/--with-filename". This looks like this:
+>
+    <filename>-<line>-<text...>
+    <filename>:<line>:<text with a match...>
+    <filename>-<line>-<text...>
+    --
+    <filename>:<line>:<text with a match...>
+<
+An example:
+>
+    autoload/writable_search/proxy.vim-26-" to adjust next proxies.
+    autoload/writable_search/proxy.vim:27:function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
+    autoload/writable_search/proxy.vim-28-  let new_lines = a:new_lines
+    --
+    autoload/writable_search/parser.vim:1:function! writable_search#parser#Run()
+    autoload/writable_search/parser.vim-2-  let grouped_lines = s:PartitionLines(getbufline('%', 1, '$'))
+    --
+    autoload/writable_search/parser.vim-25-  for lines in a:grouped_lines
+    autoload/writable_search/parser.vim:26:    let current_proxy          = writable_search#proxy#New(bufnr('%'))
+    autoload/writable_search/parser.vim-27-    let current_proxy.filename = s:FindFilename(lines)
+<
 
 ==============================================================================
 SETTINGS                                             *writable_search-settings*
 
-TODO
+                                               *g:writable_search_command_type*
+>
+    let g:writable_search_command_type = "ack"
+<
 
+Default value: "egrep"
 
-==============================================================================
-INTERNALS                                           *writable_search-internals*
+The command type to use to perform the search. If the value is "egrep", then
+the command used will be:
+>
+    egrep <query> . -R -n -H -C3 <flags>
+>
+If the value is "ack", then the command will be:
+>
+    ack <query> -H --nogroup -C3 <flags>
+>
+These are the only two types available at this time.
 
-TODO
+                                         *g:writable_search_new_buffer_command*
+>
+    let g:writable_search_new_buffer_command = 'new'
+<
+
+Default value: "tabnew"
+
+When the command |:WritableSearch| is executed, it opens a new buffer. This
+command is the one that is used for that operation. You can use any
+buffer-opening command like "new", "splitbelow vertical new", etc.
+
+                                        *g:writable_search_confirm_file_rename*
+>
+    let g:writable_search_confirm_file_rename = 0
+<
+
+Default value: 1
+
+If this setting is 1 (the default), the plugin will ask for confirmation when
+it decides to rename a file. Setting it to 0 would skip the check and rename
+it directly, making the process faster, though potentially more unsafe.
 
 ==============================================================================
 ISSUES                                                 *writable_search-issues*

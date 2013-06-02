@@ -4,7 +4,7 @@ function! writable_search#Start(...)
       call s:NewBuffer()
     endif
 
-    call s:Grep(a:1, a:000[1:])
+    call s:Grep(a:1)
     let @/ = a:1
   endif
 
@@ -163,12 +163,17 @@ function! s:NewBuffer()
   exe g:writable_search_new_buffer_command
 endfunction
 
-function! s:Grep(query, flags)
-  let egrep_command = 'r!egrep %s . -R -n -H -C3 %s'
-  let ack_command   = 'r!ack %s -H --nogroup -C3 %s'
+function! s:Grep(query)
+  let egrep_command = 'r!egrep %s . -R -n -H %s'
+  let ack_command   = 'r!ack %s -H --nogroup %s'
 
   let escaped_query = shellescape(a:query)
-  let flags         = join(a:flags, ' ')
+
+  if g:writable_search_context_lines
+    let flags = '-C'.g:writable_search_context_lines
+  else
+    let flags = ''
+  endif
 
   if g:writable_search_command_type == 'egrep'
     let b:command = printf(egrep_command, escaped_query, flags)
