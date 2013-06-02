@@ -14,4 +14,33 @@ describe "Searching" do
        One Two Three
     EOF
   end
+
+  it "can rerun a query with different flags" do
+    write_file 'one.txt', <<-EOF
+      One
+      Two
+      Three
+      Four
+      Five
+    EOF
+
+    vim.command 'WritableSearch One'
+
+    vim.command 'Rerun -C1'
+    vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
+      one.txt:1-2
+       One
+       Two
+    EOF
+
+    vim.command 'Rerun -C5'
+    vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
+      one.txt:1-5
+       One
+       Two
+       Three
+       Four
+       Five
+    EOF
+  end
 end

@@ -1,11 +1,11 @@
-function! writable_search#Start(...)
-  if a:0 > 0
+function! writable_search#Start(query)
+  if a:query != ''
     if expand('%') != ''
       call s:NewBuffer()
     endif
 
-    call s:Grep(a:1)
-    let @/ = a:1
+    call s:Grep(a:query)
+    let @/ = a:query
   endif
 
   let b:proxies = writable_search#parser#Run()
@@ -25,7 +25,7 @@ function! writable_search#Rerun(...)
     0delete _
   endif
 
-  call writable_search#Start()
+  call writable_search#Start('')
 endfunction
 
 function! writable_search#Update()
