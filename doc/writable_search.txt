@@ -1,3 +1,5 @@
+*writable_search.txt*	Perform a grep and edit the found results
+
 ==============================================================================
 CONTENTS                           *writable_search* *writable_search-contents*
 
