@@ -40,18 +40,4 @@ describe "Updating source" do
 
     IO.read('one.txt').strip.should eq "One\nTwo\nThree\nFive"
   end
-
-  it "can rename files" do
-    write_file 'test.txt', 'Test'
-
-    vim.set_buffer_contents normalize_string_indent(<<-EOF)
-      test.txt:1:Test
-    EOF
-    vim.command 'WritableSearch'
-
-    vim.command '%s/test.txt/renamed.txt/g'
-    vim.write
-
-    IO.read('renamed.txt').strip.should eq 'Test'
-  end
 end

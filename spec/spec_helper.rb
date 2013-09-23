@@ -12,6 +12,7 @@ Vimrunner::RSpec.configure do |config|
     vim = Vimrunner.start
     vim.add_plugin(plugin_path, 'plugin/writable_search.vim')
     vim.command('let g:writable_search_confirm_file_rename = 0')
+    vim.command('let g:writable_search_confirm_directory_creation = 0')
 
     def vim.buffer_contents
       echo(%<join(getbufline('%', 1, '$'), "\n")>)

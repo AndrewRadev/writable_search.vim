@@ -83,6 +83,20 @@ function! writable_search#proxy#UpdateLocal() dict
 endfunction
 
 function! writable_search#proxy#RenameFile(new_filename) dict
+  let dirname = fnamemodify(a:new_filename, ':h')
+
+  if !isdirectory(dirname)
+    if g:writable_search_confirm_directory_creation
+      if confirm(printf('Create directory path "%s"?', dirname))
+        call mkdir(dirname, 'p')
+      else
+        return
+      endif
+    else
+      call mkdir(dirname, 'p')
+    endif
+  endif
+
   if rename(self.filename, a:new_filename) == 0
     let self.filename = a:new_filename
   else
