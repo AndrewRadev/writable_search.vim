@@ -1,5 +1,12 @@
 function! writable_search#parser#Run()
-  let grouped_lines = s:PartitionLines(getbufline('%', 1, '$'))
+  let lines = getbufline('%', 1, '$')
+  let lines = s:FilterBlanks(lines)
+
+  if empty(lines)
+    return []
+  endif
+
+  let grouped_lines = s:PartitionLines(lines)
   return s:BuildProxies(grouped_lines)
 endfunction
 
@@ -19,6 +26,10 @@ function! s:PartitionLines(lines)
   call add(groups, current_group)
 
   return groups
+endfunction
+
+function! s:FilterBlanks(lines)
+  return filter(a:lines, 'v:val !~ "^\\s*$"')
 endfunction
 
 function! s:BuildProxies(grouped_lines)

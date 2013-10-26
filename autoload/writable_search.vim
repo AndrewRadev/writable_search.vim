@@ -10,6 +10,11 @@ function! writable_search#Start(query)
 
   let b:proxies = writable_search#parser#Run()
 
+  if empty(b:proxies)
+    echomsg "No results"
+    return
+  endif
+
   call writable_search#Render()
 
   set nomodified
