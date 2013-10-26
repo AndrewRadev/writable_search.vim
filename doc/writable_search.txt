@@ -139,7 +139,8 @@ SETTINGS                                             *writable_search-settings*
     let g:writable_search_command_type = "ack"
 <
 
-Default value: "egrep"
+Default value: "egrep" or "ack.vim" if ack.vim plugin is detected
+Possible values: "egrep", "ack", "ack.vim"
 
 The command type to use to perform the search. If the value is "egrep", then
 the command used will be:
@@ -150,7 +151,10 @@ If the value is "ack", then the command will be:
 >
     ack <query> -H --nogroup -C3 <flags>
 >
-These are the only two types available at this time.
+If the value is "ack.vim", then the plugin will try to use the contents of
+`g:ackprg`, by adding on the flags for the "ack" type.
+
+These are the only types available at this time.
 
                                          *g:writable_search_new_buffer_command*
 >

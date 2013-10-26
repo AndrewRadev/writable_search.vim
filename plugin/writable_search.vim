@@ -6,8 +6,18 @@ let g:loaded_writable_search = '0.0.1' " version number
 let s:keepcpo = &cpo
 set cpo&vim
 
+" Possible values:
+"
+"   - egrep
+"   - ack
+"   - ack.vim
+"
 if !exists('g:writable_search_command_type')
-  let g:writable_search_command_type = 'egrep'
+  if exists('g:ackprg')
+    let g:writable_search_command_type = 'ack.vim'
+  else
+    let g:writable_search_command_type = 'egrep'
+  endif
 endif
 
 if !exists('g:writable_search_new_buffer_command')

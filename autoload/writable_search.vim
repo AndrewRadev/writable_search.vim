@@ -184,10 +184,12 @@ function! s:Grep(query)
     let b:command = printf(egrep_command, escaped_query, flags)
   elseif g:writable_search_command_type == 'ack'
     let b:command = printf(ack_command, escaped_query, flags)
+  elseif g:writable_search_command_type == 'ack.vim'
+    let b:command = 'r!'.g:ackprg.' '.escaped_query.' -H --nogroup --nocolumn '.flags
   else
     echoerr "Unknown value for g:writable_search_command_type:  "
           \ .g:writable_search_command_type
-          \ .". Needs to be one of 'egrep', 'ack'"
+          \ .". Needs to be one of 'egrep', 'ack', 'ack.vim'"
   endif
 
   %delete _
