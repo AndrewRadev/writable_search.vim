@@ -174,7 +174,8 @@ endfunction
 
 function! s:Grep(query)
   let egrep_command = 'r!egrep %s . -R -n -H %s'
-  let ack_command   = 'r!ack %s -H --nogroup %s'
+  let ack_command   = 'r!ack %s --nogroup %s'
+  let ag_command    = 'r!ag %s --nogroup %s'
 
   let escaped_query = shellescape(a:query)
 
@@ -188,8 +189,13 @@ function! s:Grep(query)
     let b:command = printf(egrep_command, escaped_query, flags)
   elseif g:writable_search_command_type == 'ack'
     let b:command = printf(ack_command, escaped_query, flags)
+  elseif g:writable_search_command_type == 'ag'
+    let b:command = printf(ag_command, escaped_query, flags)
   elseif g:writable_search_command_type == 'ack.vim'
-    let b:command = 'r!'.g:ackprg.' '.escaped_query.' -H --nogroup --nocolumn '.flags
+    let ackprg = g:ackprg
+    let ackprg = substitute(ackprg, '--column', '', '')
+
+    let b:command = 'r!'.ackprg.' '.escaped_query.' --nogroup '.flags
   else
     echoerr "Unknown value for g:writable_search_command_type:  "
           \ .g:writable_search_command_type

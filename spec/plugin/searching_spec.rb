@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe "Searching" do
+  #
+  # Note: This fails for ag, since it seems to also include the EOL newline in
+  # its results.
+  #
   it "can search for a given query and show the results" do
     write_file 'one.txt', 'One Two Three'
     write_file 'two.txt', 'Two Three Four'
