@@ -101,5 +101,6 @@ function! writable_search#proxy#RenameFile(new_filename) dict
     let self.filename = a:new_filename
   else
     echoerr printf('Couldn''t rename "%s" to "%s"', self.filename, a:new_filename)
+    return
   endif
 endfunction

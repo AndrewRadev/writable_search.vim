@@ -194,6 +194,7 @@ function! s:Grep(query)
     echoerr "Unknown value for g:writable_search_command_type:  "
           \ .g:writable_search_command_type
           \ .". Needs to be one of 'egrep', 'ack', 'ack.vim'"
+    return
   endif
 
   %delete _

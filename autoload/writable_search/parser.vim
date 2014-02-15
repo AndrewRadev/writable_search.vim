@@ -54,6 +54,7 @@ function! s:BuildProxies(grouped_lines)
         let [_match, line_number, body; _rest] = matchlist(line, non_matched_line_pattern)
       else
         echoerr "Unexpected format of line: ".line
+        return
       endif
 
       call add(current_proxy.lines, body)
