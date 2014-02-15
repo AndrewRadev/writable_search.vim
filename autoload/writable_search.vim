@@ -51,6 +51,7 @@ function! writable_search#Update()
 
       if len(b:proxies) <= last_proxy_index
         echoerr "Number of patches doesn't add up"
+        return
       endif
 
       if len(proxy_updates) > 0
@@ -82,11 +83,13 @@ function! writable_search#Update()
     " Validate that we've got all the proxies and their new lines
     if len(proxy_updates) != len(b:proxies)
       echoerr "Number of patches doesn't add up"
+      return
     endif
 
     for proxy_update in proxy_updates
       if proxy_update.local_end < 0
         echoerr "Error parsing update"
+        return
       endif
     endfor
 
@@ -152,6 +155,7 @@ function! writable_search#ProxyUnderCursor()
   while header_lineno > 0 && header_lineno < cursor_lineno
     if len(b:proxies) <= last_proxy_index
       echoerr "Number of patches doesn't add up"
+      return
     endif
 
     let last_proxy_index += 1
