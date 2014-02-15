@@ -2,7 +2,7 @@ task default: :test
 
 desc "Prepare archive for deployment"
 task :archive do
-  sh 'zip -r ~/splitjoin.zip autoload/ doc/splitjoin.txt ftplugin/ plugin/'
+  sh 'zip -r ~/writable_search.zip autoload/ doc/writable_search.txt ftplugin/ plugin/ syntax/'
 end
 
 desc "Test with all possible command types"
