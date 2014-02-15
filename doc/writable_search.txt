@@ -154,7 +154,11 @@ If the value is "ack", then the command will be:
 If the value is "ack.vim", then the plugin will try to use the contents of
 `g:ackprg`, by adding on the flags for the "ack" type.
 
-These are the only types available at this time.
+These are the only supported types at this time.
+
+Note: You could use "ag" as well. Unfortunately, there are some issues with it
+at the moment, so it wouldn't work correctly when replacing things at the end
+of a file.
 
                                          *g:writable_search_new_buffer_command*
 >
