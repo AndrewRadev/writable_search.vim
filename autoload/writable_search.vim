@@ -1,6 +1,6 @@
 function! writable_search#Start(query)
   if a:query != ''
-    if expand('%') != ''
+    if expand('%') != '' && &filetype != 'writable_search'
       call s:NewBuffer()
     endif
 
