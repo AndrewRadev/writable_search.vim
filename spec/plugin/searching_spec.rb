@@ -47,4 +47,16 @@ describe "Searching" do
        Five
     EOF
   end
+
+  it "ignores files that look like binary files" do
+    write_file 'one.txt', 'One'
+    write_file 'one', "#{0.chr}One"
+
+    vim.command 'WritableSearch One'
+
+    vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
+      one.txt:1-1
+       One
+    EOF
+  end
 end

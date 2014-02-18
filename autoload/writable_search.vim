@@ -173,7 +173,7 @@ function! s:NewBuffer()
 endfunction
 
 function! s:Grep(query)
-  let egrep_command = 'r!egrep %s . -R -n -H %s'
+  let egrep_command = 'r!egrep %s . -R -I -n -H %s'
   let ack_command   = 'r!ack %s --nogroup %s'
   let ag_command    = 'r!ag %s --nogroup %s'
 
