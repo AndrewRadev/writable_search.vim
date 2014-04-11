@@ -1,13 +1,32 @@
-function! writable_search#Start(query)
-  if a:query != ''
-    if expand('%') != '' && &filetype != 'writable_search'
-      call s:NewBuffer()
-    endif
+function! writable_search#Start(query, count)
+  echo "Searching ..."
 
-    call s:Grep(a:query)
-    let @/ = a:query
+  if a:count > 0
+    " then we've selected something in visual mode
+    let query = s:LastSelectedText()
+  elseif a:query == ''
+    " no pattern is provided, search for the word under the cursor
+    let query = expand("<cword>")
+  else
+    let query = a:query
+  end
+
+  if query == ''
+    echoerr "No query given"
+    return
   endif
 
+  if expand('%') != '' && &filetype != 'writable_search'
+    call s:NewBuffer()
+  endif
+
+  silent call s:Grep(query)
+  let @/ = query
+
+  call writable_search#Parse()
+endfunction
+
+function! writable_search#Parse()
   let b:proxies = writable_search#parser#Run()
 
   if empty(b:proxies)
@@ -206,4 +225,19 @@ function! s:Grep(query)
   %delete _
   exe b:command
   0delete _
+endfunction
+
+function! s:LastSelectedText()
+  let saved_cursor = getpos('.')
+
+  let original_reg      = getreg('z')
+  let original_reg_type = getregtype('z')
+
+  normal! gv"zy
+  let text = @z
+
+  call setreg('z', original_reg, original_reg_type)
+  call setpos('.', saved_cursor)
+
+  return text
 endfunction

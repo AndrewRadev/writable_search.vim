@@ -58,13 +58,27 @@ last search again, with additional flags. For example:
 :Rerun -C1
 ```
 
-If the command `:WritableSearch` is used without any arguments, it assumes
-that an appropriate search has already been run and the results are in the
-current buffer. It tries to parse the contents of the buffer directly. This
-allows you to plug in your own, potentially complicated search expression, and
-have the plugin make it writable for you. However, the format must be the same
-as the output of grep with the options "-n/--line-number" and
-"-H/--with-filename". It looks like this:
+If you call the `:WritableSearch` command with no arguments, it will take the
+word under the cursor and search for that. If you call it while having marked
+something in visual mode (with `:'<,'>WritableSearch`), it will use the
+current visual selection as the search query.
+
+By default, the plugin searches either with `egrep`, or, if you have the
+`ack.vim` plugin installed, with your `g:ackprg`. To change this behavior, see
+the "Compatibility" section below.
+
+If you want to plug in your own, potentially complicated search expression,
+and have the plugin make it writable for you, you can put the results in a
+buffer and invoke the parsing function directly:
+
+``` vim
+:call writable_search#Parse()
+```
+
+This will try to parse the contents of the buffer and turn them into a
+writable_search buffer. However, the format must be the same as the output of
+grep with the options "-n/--line-number" and "-H/--with-filename". This looks
+like this:
 
 ```
 <filename>-<line>-<text...>

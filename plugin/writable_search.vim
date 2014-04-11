@@ -36,7 +36,7 @@ if !exists('g:writable_search_context_lines')
   let g:writable_search_context_lines = 3
 endif
 
-command! -nargs=* WritableSearch call writable_search#Start(<q-args>)
+command! -count=0 -nargs=* WritableSearch call writable_search#Start(<q-args>, <count>)
 
 let &cpo = s:keepcpo
 unlet s:keepcpo

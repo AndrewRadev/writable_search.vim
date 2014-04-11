@@ -16,7 +16,7 @@ describe "Parsing" do
     EOF
 
     vim.edit 'grep_results'
-    vim.command 'WritableSearch'
+    vim.command 'call writable_search#Parse()'
 
     vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
       autoload/writable_search/proxy.vim:26-28
@@ -46,7 +46,7 @@ describe "Parsing" do
     EOF
 
     vim.edit 'grep_results'
-    vim.command 'WritableSearch'
+    vim.command 'call writable_search#Parse()'
     vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
       autoload/writable_search/proxy.vim:26-28
        " to adjust next proxies.
