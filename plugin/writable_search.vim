@@ -11,6 +11,7 @@ set cpo&vim
 "   - egrep
 "   - ack
 "   - ack.vim
+"   - git-grep
 "
 if !exists('g:writable_search_command_type')
   if exists('g:ackprg')

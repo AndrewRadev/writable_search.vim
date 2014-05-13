@@ -152,7 +152,7 @@ SETTINGS                                             *writable_search-settings*
 <
 
 Default value: "egrep" or "ack.vim" if ack.vim plugin is detected
-Possible values: "egrep", "ack", "ack.vim"
+Possible values: "egrep", "ack", "ack.vim", "git-grep"
 
 The command type to use to perform the search. If the value is "egrep", then
 the command used will be:

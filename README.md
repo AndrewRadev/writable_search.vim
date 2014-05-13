@@ -135,6 +135,7 @@ You can use the `g:writable_search_command_type` variable to control what kind o
 - `egrep`, the default. Slow, but should always be present on a *nix system
 - `ack`, using the perl [ack](http://beyondgrep.com/) tool.
 - `ack.vim`, relying on the [ack.vim](https://github.com/mileszs/ack.vim) plugin. This simply takes the `g:ackprg` and tries to re-use it. It may not work correctly depending on what you've set it to. This is the default if a `g:ackprg` variable is detected upon startup.
+- `git-grep`, relying on git.
 
 It can also be set to `ag` (or it could use `ag` through `ack.vim`), but right now, there are some problems with it when dealing with matches at the ends of files. It's recommended to stick to `ack` or `egrep`.
 

@@ -192,9 +192,10 @@ function! s:NewBuffer()
 endfunction
 
 function! s:Grep(query)
-  let egrep_command = 'r!egrep %s . -R -I -n -H %s'
-  let ack_command   = 'r!ack %s --nogroup %s'
-  let ag_command    = 'r!ag %s --nogroup %s'
+  let egrep_command    = 'r!egrep %s . -R -I -n -H %s'
+  let git_grep_command = 'r!git grep -I -n -H %s %s'
+  let ack_command      = 'r!ack %s --nogroup %s'
+  let ag_command       = 'r!ag %s --nogroup %s'
 
   let escaped_query = shellescape(a:query)
 
@@ -210,6 +211,8 @@ function! s:Grep(query)
     let b:command = printf(ack_command, escaped_query, flags)
   elseif g:writable_search_command_type == 'ag'
     let b:command = printf(ag_command, escaped_query, flags)
+  elseif g:writable_search_command_type == 'git-grep'
+    let b:command = printf(git_grep_command, flags, escaped_query)
   elseif g:writable_search_command_type == 'ack.vim'
     let ackprg = g:ackprg
     let ackprg = substitute(ackprg, '--column', '', '')
