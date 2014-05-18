@@ -55,7 +55,7 @@ endfunction
 function! writable_search#Update()
   try
     call writable_search#cursor#Push()
-    normal! gg
+    normal! gg0
 
     let header_pattern   = '^\S.*$'
     let last_proxy_index = 0
