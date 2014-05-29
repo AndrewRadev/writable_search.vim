@@ -3,13 +3,8 @@ setlocal bufhidden=wipe
 setlocal autoindent
 
 if exists('b:command')
-  let shell_command = b:command[2:] " strip off the initial r!
-
-  if exists('b:rerun_args')
-    let shell_command .= ' '.b:rerun_args
-  endif
-
-  exe 'silent file WritableSearch:\ '.fnameescape(shell_command)
+  let command_string = b:command.String()
+  exe 'silent file WritableSearch:\ '.fnameescape(command_string)
 else
   exe 'silent file WritableSearch'
 endif

@@ -42,14 +42,14 @@ endfunction
 
 function! writable_search#Rerun(...)
   if a:0 > 0
-    let b:rerun_args = a:1
-
-    %delete _
-    exe b:command.' '.a:1
-    0delete _
+    let b:command.extra_flags = a:1
   endif
 
-  call writable_search#Start('')
+  %delete _
+  call b:command.Read()
+  0delete _
+
+  call writable_search#Parse()
 endfunction
 
 function! writable_search#Update()
@@ -192,41 +192,10 @@ function! s:NewBuffer()
 endfunction
 
 function! s:Grep(query)
-  let egrep_command    = 'r!egrep %s . -R -I -n -H %s'
-  let git_grep_command = 'r!git grep -I -n -H %s %s'
-  let ack_command      = 'r!ack %s --nogroup %s'
-  let ag_command       = 'r!ag %s --nogroup %s'
-
-  let escaped_query = shellescape(a:query)
-
-  if g:writable_search_context_lines
-    let flags = '-C'.g:writable_search_context_lines
-  else
-    let flags = ''
-  endif
-
-  if g:writable_search_command_type == 'egrep'
-    let b:command = printf(egrep_command, escaped_query, flags)
-  elseif g:writable_search_command_type == 'ack'
-    let b:command = printf(ack_command, escaped_query, flags)
-  elseif g:writable_search_command_type == 'ag'
-    let b:command = printf(ag_command, escaped_query, flags)
-  elseif g:writable_search_command_type == 'git-grep'
-    let b:command = printf(git_grep_command, flags, escaped_query)
-  elseif g:writable_search_command_type == 'ack.vim'
-    let ackprg = g:ackprg
-    let ackprg = substitute(ackprg, '--column', '', '')
-
-    let b:command = 'r!'.ackprg.' '.escaped_query.' --nogroup '.flags
-  else
-    echoerr "Unknown value for g:writable_search_command_type:  "
-          \ .g:writable_search_command_type
-          \ .". Needs to be one of 'egrep', 'ack', 'ack.vim'"
-    return
-  endif
+  let b:command = writable_search#command#New(g:writable_search_command_type, a:query)
 
   %delete _
-  exe b:command
+  call b:command.Read()
   0delete _
 endfunction
 

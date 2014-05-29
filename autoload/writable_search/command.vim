@@ -1,0 +1,74 @@
+function! writable_search#command#New(type, query)
+  return {
+        \ 'query':       a:query,
+        \ 'type':        a:type,
+        \ 'extra_flags': '',
+        \
+        \ 'Read':        function('writable_search#command#Read'),
+        \ 'String':      function('writable_search#command#String'),
+        \ 'IsSupported': function('writable_search#command#IsSupported'),
+        \ 'FullCommand': function('writable_search#command#FullCommand'),
+        \ }
+endfunction
+
+function! writable_search#command#Read() dict
+  let full_command = self.FullCommand()
+  if full_command == ''
+    return
+  endif
+
+  exe 'r!'.full_command
+endfunction
+
+function! writable_search#command#String() dict
+  let full_command = self.FullCommand()
+  if full_command == ''
+    return
+  endif
+
+  return full_command
+endfunction
+
+function! writable_search#command#FullCommand() dict
+  let egrep_command    = 'egrep %s . -R -I -n -H %s'
+  let git_grep_command = 'git grep -I -n -H %s %s'
+  let ack_command      = 'ack %s --nogroup %s'
+  let ag_command       = 'ag %s --nogroup %s'
+
+  let escaped_query = shellescape(self.query)
+
+  if g:writable_search_context_lines
+    let flags = '-C'.g:writable_search_context_lines
+  else
+    let flags = ''
+  endif
+
+  if self.extra_flags != ''
+    let flags .= ' '.(self.extra_flags)
+  endif
+
+  if self.type == 'egrep'
+    let full_command = printf(egrep_command, escaped_query, flags)
+  elseif self.type == 'ack'
+    let full_command = printf(ack_command, escaped_query, flags)
+  elseif self.type == 'ag'
+    let full_command = printf(ag_command, escaped_query, flags)
+  elseif self.type == 'git-grep'
+    let full_command = printf(git_grep_command, flags, escaped_query)
+  elseif self.type == 'ack.vim'
+    let ackprg = g:ackprg
+    let ackprg = substitute(ackprg, '--column', '', '')
+
+    let full_command = ackprg.' '.escaped_query.' --nogroup '.flags
+  else
+    echoerr "Unknown value for g:writable_search_command_type:  "
+          \ .g:writable_search_command_type
+          \ .". Needs to be one of 'git-grep', 'egrep', 'ack', 'ack.vim', 'ag'"
+    return ''
+  endif
+
+  return full_command
+endfunction
+
+function! writable_search#command#IsSupported() dict
+endfunction
