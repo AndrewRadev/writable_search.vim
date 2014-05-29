@@ -7,7 +7,7 @@ describe "Updating from source" do
     vim.set_buffer_contents normalize_string_indent(<<-EOF)
       one.txt:1:One Two Three
     EOF
-    vim.command 'WritableSearch'
+    vim.command 'call writable_search#Parse()'
 
     write_file 'one.txt', 'One Foo Three'
 

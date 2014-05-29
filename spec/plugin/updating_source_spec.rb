@@ -10,7 +10,7 @@ describe "Updating source" do
       --
       two.txt:1:Two Three Four
     EOF
-    vim.command 'WritableSearch'
+    vim.command 'call writable_search#Parse()'
 
     vim.command '%s/Two/Foo/g'
     vim.write
@@ -30,7 +30,7 @@ describe "Updating source" do
       --
       one.txt:2:Four
     EOF
-    vim.command 'WritableSearch'
+    vim.command 'call writable_search#Parse()'
 
     vim.command '%s/One/One\r/g'
     vim.command '%s/Two/Two\r/g'

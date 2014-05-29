@@ -10,7 +10,7 @@ describe "Renaming files" do
       --
       two.txt:1:Two
     EOF
-    vim.command 'WritableSearch'
+    vim.command 'call writable_search#Parse()'
 
     vim.command '%s/two.txt/three.txt/g'
     vim.write
@@ -30,7 +30,7 @@ describe "Renaming files" do
       --
       dir/two.txt:1:Two
     EOF
-    vim.command 'WritableSearch'
+    vim.command 'call writable_search#Parse()'
 
     vim.command '%s?dir/two.txt?other_dir/three.txt?g'
     vim.write
