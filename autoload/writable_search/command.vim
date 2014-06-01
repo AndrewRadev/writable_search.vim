@@ -71,4 +71,32 @@ function! writable_search#command#FullCommand() dict
 endfunction
 
 function! writable_search#command#IsSupported() dict
+  if self.type == 'git-grep'
+    return s:ExecutableExists('git') && s:InGitRepo()
+  elseif self.type == 'ack.vim'
+    return exists('g:ackprg')
+  elseif self.type == 'ack'
+    return s:ExecutableExists('ack')
+  elseif self.type == 'egrep'
+    return s:ExecutableExists('egrep')
+  endif
+endfunction
+
+function! s:InGitRepo()
+  let path_components = split(getcwd(), '/')
+
+  for index in range(len(path_components), 0, -1)
+    let path = '/'.join(path_components[0:index], '/')
+
+    if glob(path.'/.git', 1) != ''
+      return 1
+    endif
+  endfor
+
+  return 0
+endfunction
+
+function! s:ExecutableExists(executable)
+  call system('which '.a:executable)
+  return !v:shell_error
 endfunction

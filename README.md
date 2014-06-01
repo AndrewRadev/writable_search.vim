@@ -1,3 +1,6 @@
+Note: This plugin works on Unix-based systems, but probably doesn't work on
+Windows.
+
 ## Usage
 
 The plugin exposes the command `:WritableSearch`, which takes a search query
@@ -63,9 +66,41 @@ word under the cursor and search for that. If you call it while having marked
 something in visual mode (with `:'<,'>WritableSearch`), it will use the
 current visual selection as the search query.
 
-By default, the plugin searches either with `egrep`, or, if you have the
-`ack.vim` plugin installed, with your `g:ackprg`. To change this behavior, see
-the "Compatibility" section below.
+### Important
+
+- Notice that each piece of code has been indented with a single extra
+  space. This has been done to make parsing the results possible and you
+  should never put anything in column 1 yourself.
+
+- You should never delete a result item yourself, or add new ones. The
+  parser will get confused and error out.
+
+### Backends
+
+By default, the plugin attempts to find the "best" search mechanism that can
+work. It tries to use `git-grep` if you're in a git directory, `ack.vim` if
+the plugin is available, and so on. It falls back to `egrep` as the final
+resort.
+
+This is encoded in the variable `g:writable_search_command_types`, which holds
+a list of all the types of searches that will be attempted. See its
+documentation for details, but here's a short summary of the possible items,
+in their default ordering:
+
+- `git-grep`, only in a git repository.
+- `ack.vim`, relying on the [ack.vim](https://github.com/mileszs/ack.vim)
+  plugin. This simply takes the `g:ackprg` variable and tries to re-use it. It
+  may not work correctly depending on what you've set it to. It only works if
+  the `g:ackprg` variable is detected.
+- `ack`, using the perl [ack](http://beyondgrep.com/) tool, only works if the
+  tool is installed.
+- `egrep`, the last resort. Slow, but should always be present on a *nix system
+
+The plugin could also use `ag` (or it could use `ag` through `ack.vim`), but
+right now, there are some problems with it when dealing with matches at the
+ends of files. It's recommended to stick to `ack` or `egrep`.
+
+### Advanced
 
 If you want to plug in your own, potentially complicated search expression,
 and have the plugin make it writable for you, you can put the results in a
@@ -118,26 +153,6 @@ autoload/writable_search/parser.vim:25-27
      let current_proxy          = writable_search#proxy#New(bufnr('%'))
      let current_proxy.filename = s:FindFilename(lines)
 ```
-
-**Important notes**:
-
-- Notice that each piece of code has been indented with a single extra space.
-  This has been done to make parsing the results possible and you should never
-  put anything in column 1 yourself.
-
-- You should never delete a result item yourself, or add new ones. The parser
-  will get confused and error out.
-
-## Compatibility
-
-You can use the `g:writable_search_command_type` variable to control what kind of search tool to use. Right now, the options are:
-
-- `egrep`, the default. Slow, but should always be present on a *nix system
-- `ack`, using the perl [ack](http://beyondgrep.com/) tool.
-- `ack.vim`, relying on the [ack.vim](https://github.com/mileszs/ack.vim) plugin. This simply takes the `g:ackprg` and tries to re-use it. It may not work correctly depending on what you've set it to. This is the default if a `g:ackprg` variable is detected upon startup.
-- `git-grep`, relying on git.
-
-It can also be set to `ag` (or it could use `ag` through `ack.vim`), but right now, there are some problems with it when dealing with matches at the ends of files. It's recommended to stick to `ack` or `egrep`.
 
 ## Contributing
 

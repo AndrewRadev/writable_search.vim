@@ -192,7 +192,30 @@ function! s:NewBuffer()
 endfunction
 
 function! s:Grep(query)
-  let b:command = writable_search#command#New(g:writable_search_command_type, a:query)
+  if g:writable_search_command_type != ''
+    let b:command = writable_search#command#New(g:writable_search_command_type, a:query)
+
+    if !b:command.IsSupported()
+      unlet b:command
+      echoerr "The command type '".g:writable_search_command_type."' is not supported on this system"
+      return
+    endif
+  else
+    for possible_command in g:writable_search_command_types
+      let b:command = writable_search#command#New(possible_command, a:query)
+
+      if b:command.IsSupported()
+        break
+      else
+        unlet b:command
+      endif
+    endfor
+  endif
+
+  if !exists('b:command')
+    echoerr "Couldn't find a supported command on the system from: ".join(g:writable_search_command_types, ', ')
+    return
+  endif
 
   %delete _
   call b:command.Read()
