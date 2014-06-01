@@ -82,10 +82,10 @@ work. It tries to use `git-grep` if you're in a git directory, `ack.vim` if
 the plugin is available, and so on. It falls back to `egrep` as the final
 resort.
 
-This is encoded in the variable `g:writable_search_command_types`, which holds
-a list of all the types of searches that will be attempted. See its
-documentation for details, but here's a short summary of the possible items,
-in their default ordering:
+This is encoded in the variable `g:writable_search_backends`, which holds a
+list of all the types of searches that will be attempted. See its documentation
+for details, but here's a short summary of the possible items, in their default
+ordering:
 
 - `git-grep`, only in a git repository.
 - `ack.vim`, relying on the [ack.vim](https://github.com/mileszs/ack.vim)

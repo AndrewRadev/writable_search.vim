@@ -201,7 +201,7 @@ function! s:Grep(query)
       return
     endif
   else
-    for possible_command in g:writable_search_command_types
+    for possible_command in g:writable_search_backends
       let b:command = writable_search#command#New(possible_command, a:query)
 
       if b:command.IsSupported()
@@ -213,7 +213,7 @@ function! s:Grep(query)
   endif
 
   if !exists('b:command')
-    echoerr "Couldn't find a supported command on the system from: ".join(g:writable_search_command_types, ', ')
+    echoerr "Couldn't find a supported command on the system from: ".join(g:writable_search_backends, ', ')
     return
   endif
 

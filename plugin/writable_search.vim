@@ -17,8 +17,8 @@ endif
 "   - ack.vim
 "   - git-grep
 "
-if !exists('g:writable_search_command_types')
-  let g:writable_search_command_types = ['git-grep', 'ack.vim', 'ack', 'egrep']
+if !exists('g:writable_search_backends')
+  let g:writable_search_backends = ['git-grep', 'ack.vim', 'ack', 'egrep']
 endif
 
 if !exists('g:writable_search_new_buffer_command')

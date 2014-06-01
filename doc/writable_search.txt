@@ -102,8 +102,8 @@ work. It tries to use `git-grep` if you're in a git directory, `ack.vim` if
 the plugin is available, and so on. It falls back to `egrep` as the final
 resort.
 
-This is encoded in the variable |g:writable_search_command_types|, which holds
-a list of all the types of searches that will be attempted. See its
+This is encoded in the variable |g:writable_search_backends|, which holds a
+list of all the types of searches that will be attempted. See its
 documentation for details, but here's a short summary of the possible items,
 in their default ordering:
 
@@ -168,13 +168,13 @@ The resulting writable_search buffer for this example would look like so:
 ==============================================================================
 SETTINGS                                             *writable_search-settings*
 
-                                              *g:writable_search_command_types*
+                                                   *g:writable_search_backends*
 >
-    let g:writable_search_command_types = ["ack", "egrep"]
+    let g:writable_search_backends = ["ack", "egrep"]
 <
 Default value: ["git-grep", "ack.vim", "ack", "egrep"]
 
-The command types to attempt to perform the search. For the value "egrep", the
+The backends to attempt to perform the search with. For the value "egrep", the
 command used will be:
 >
     egrep <query> . -R -n -H -C3 <flags>
@@ -207,8 +207,8 @@ Default value: ""
 
 Setting this variable to a single command type forces its usage.
 
-This setting is deprecated, since the |g:writable_search_command_types|
-variable can do the same job -- simply set it to a list with one item.
+This setting is deprecated, since the |g:writable_search_backends| variable
+can do the same job -- simply set it to a list with one item.
 
                                          *g:writable_search_new_buffer_command*
 >
