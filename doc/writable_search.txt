@@ -150,7 +150,6 @@ SETTINGS                                             *writable_search-settings*
 >
     let g:writable_search_command_type = "ack"
 <
-
 Default value: "egrep" or "ack.vim" if ack.vim plugin is detected
 Possible values: "egrep", "ack", "ack.vim", "git-grep"
 
@@ -176,7 +175,6 @@ of a file.
 >
     let g:writable_search_new_buffer_command = 'new'
 <
-
 Default value: "tabnew"
 
 When the command |:WritableSearch| is executed, it opens a new buffer. This
@@ -187,7 +185,6 @@ buffer-opening command like "new", "splitbelow vertical new", etc.
 >
     let g:writable_search_confirm_file_rename = 0
 <
-
 Default value: 1
 
 If this setting is 1 (the default), the plugin will ask for confirmation when
@@ -198,13 +195,26 @@ it directly, making the process faster, though potentially more unsafe.
 >
     let g:writable_search_context_lines = 5
 <
-
 Default value: 3
 
 This controls how many lines of context around the match should be shown.
 Internally, it's simply handed down to the search command's "-C" flag. If it's
 set to 0, a "-C" flag will not be provided. Remember that you can use ":Rerun"
 to change this on a case-by-case basis.
+
+                                    *g:writable_search_result_buffer_utilities*
+>
+    let g:writable_search_result_buffer_utilities = 0
+<
+Default value: 1
+
+The writable search result buffer has some commands and mappings to make it
+easier to work with the results. Set this variable to 0 in order to disable them.
+
+Even if they're disabled, you can take a look at
+`ftplugin/writable_search.vim` where they're defined and copy them over to
+your own local `~/.vim/ftplugin/writable_search.vim`. That way, you can only
+pick the ones you like or use different commands names or mappings.
 
 
 ==============================================================================

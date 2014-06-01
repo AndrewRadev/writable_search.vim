@@ -37,6 +37,10 @@ if !exists('g:writable_search_context_lines')
   let g:writable_search_context_lines = 3
 endif
 
+if !exists('g:writable_search_result_buffer_utilities')
+  let g:writable_search_result_buffer_utilities = 1
+endif
+
 command! -count=0 -nargs=* WritableSearch call writable_search#Start(<q-args>, <count>)
 
 let &cpo = s:keepcpo

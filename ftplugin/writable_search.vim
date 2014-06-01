@@ -9,22 +9,12 @@ else
   exe 'silent file WritableSearch'
 endif
 
-command! -buffer -nargs=* Rerun call writable_search#Rerun(<q-args>)
-
 augroup writable_search
   autocmd!
-
   autocmd BufWriteCmd <buffer> call writable_search#Update()
 augroup END
 
-nnoremap <buffer> <c-w>f :silent call <SID>OpenSource()<cr>
-function! s:OpenSource()
-  let proxy = writable_search#ProxyUnderCursor()
-  exe 'split '.proxy.filename
-
-  " jump to middle of match
-  exe ((proxy.end_line + proxy.start_line) / 2)
-  normal! zz
-
-  silent! normal! zO
-endfunction
+if g:writable_search_result_buffer_utilities
+  command! -buffer -nargs=* Rerun call writable_search#Rerun(<q-args>)
+  nnoremap <buffer> <c-w>f :silent call writable_search#ftplugin#OpenSource('split')<cr>
+endif
