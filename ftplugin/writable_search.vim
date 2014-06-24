@@ -16,5 +16,5 @@ augroup END
 
 if g:writable_search_result_buffer_utilities
   command! -buffer -nargs=* Rerun call writable_search#Rerun(<q-args>)
-  nnoremap <buffer> <c-w>f :silent call writable_search#ftplugin#OpenSource('split')<cr>
+  nnoremap <buffer> <c-w>f :call writable_search#ftplugin#OpenSource('split')<cr>
 endif

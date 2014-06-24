@@ -171,7 +171,13 @@ function! writable_search#ProxyUnderCursor()
   exe 1
 
   let header_lineno = search(header_pattern, 'Wc')
+
+  echomsg "Cursor: ".cursor_lineno
+  echomsg "Initial Header: ".header_lineno
+
   while header_lineno > 0 && header_lineno < cursor_lineno
+    echomsg "Header: ".header_lineno
+
     if len(b:proxies) <= last_proxy_index
       echoerr "Number of patches doesn't add up"
       return
@@ -181,6 +187,8 @@ function! writable_search#ProxyUnderCursor()
     exe (header_lineno + 1)
     let header_lineno = search(header_pattern, 'Wc')
   endwhile
+
+  echomsg "Last Index: ".last_proxy_index
 
   call writable_search#cursor#Pop()
 
