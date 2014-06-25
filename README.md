@@ -96,6 +96,13 @@ ordering:
   tool is installed.
 - `egrep`, the last resort. Slow, but should always be present on a *nix system
 
+So, if you want to use only `ack.vim` and fall back to `egrep` if the `ack`
+program is not installed, you would put this in your `~/.vimrc`:
+
+``` vim
+let g:writable_search_backends = ['ack.vim', 'egrep']
+```
+
 The plugin could also use `ag` (or it could use `ag` through `ack.vim`), but
 right now, there are some problems with it when dealing with matches at the
 ends of files. It's recommended to stick to `ack` or `egrep`.
