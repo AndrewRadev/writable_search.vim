@@ -5,8 +5,6 @@ setlocal autoindent
 if exists('b:command')
   let command_string = b:command.String()
   exe 'silent file WritableSearch:\ '.fnameescape(command_string)
-else
-  exe 'silent file WritableSearch'
 endif
 
 augroup writable_search
