@@ -260,6 +260,16 @@ Even if they're disabled, you can take a look at
 your own local `~/.vim/ftplugin/writable_search.vim`. That way, you can only
 pick the ones you like or use different commands names or mappings.
 
+                                                  *g:writable_search_highlight*
+>
+    let g:writable_search_highlight = 'Statement'
+<
+
+Default value: 'Operator'
+
+The syntax group to use for highlighting the search query in the result
+buffer. Set to the empty string, "", in order to disable this functionality.
+
 
 ==============================================================================
 ISSUES                                                 *writable_search-issues*

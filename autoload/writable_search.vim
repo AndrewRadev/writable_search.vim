@@ -21,7 +21,13 @@ function! writable_search#Start(query, count)
   endif
 
   silent call s:Grep(query)
-  let @/ = query
+
+  if g:writable_search_highlight != ''
+    if exists('b:query_highlight_id')
+      call matchdelete(b:query_highlight_id)
+    endif
+    let b:query_highlight_id = matchadd(g:writable_search_highlight, '^\s.*\zs'.query, 0)
+  endif
 
   call writable_search#Parse()
 endfunction
