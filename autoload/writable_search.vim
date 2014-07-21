@@ -3,7 +3,7 @@ function! writable_search#Start(query, count)
 
   if a:count > 0
     " then we've selected something in visual mode
-    let query = s:LastSelectedText()
+    let query = shellescape(s:LastSelectedText())
   elseif a:query == ''
     " no pattern is provided, search for the word under the cursor
     let query = expand("<cword>")
