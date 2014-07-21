@@ -35,8 +35,6 @@ function! writable_search#command#FullCommand() dict
   let ack_command      = 'ack %s --nogroup %s'
   let ag_command       = 'ag %s --nogroup %s'
 
-  let escaped_query = shellescape(self.query)
-
   if g:writable_search_context_lines
     let flags = '-C'.g:writable_search_context_lines
   else
@@ -48,18 +46,18 @@ function! writable_search#command#FullCommand() dict
   endif
 
   if self.type == 'egrep'
-    let full_command = printf(egrep_command, escaped_query, flags)
+    let full_command = printf(egrep_command, self.query, flags)
   elseif self.type == 'ack'
-    let full_command = printf(ack_command, escaped_query, flags)
+    let full_command = printf(ack_command, self.query, flags)
   elseif self.type == 'ag'
-    let full_command = printf(ag_command, escaped_query, flags)
+    let full_command = printf(ag_command, self.query, flags)
   elseif self.type == 'git-grep'
-    let full_command = printf(git_grep_command, flags, escaped_query)
+    let full_command = printf(git_grep_command, flags, self.query)
   elseif self.type == 'ack.vim'
     let ackprg = g:ackprg
     let ackprg = substitute(ackprg, '--column', '', '')
 
-    let full_command = ackprg.' '.escaped_query.' --nogroup '.flags
+    let full_command = ackprg.' '.self.query.' --nogroup '.flags
   else
     echoerr "Unknown value for g:writable_search_command_type:  "
           \ .g:writable_search_command_type
