@@ -59,105 +59,113 @@ function! writable_search#Rerun(...)
 endfunction
 
 function! writable_search#Update()
-  try
-    call writable_search#cursor#Push()
-    normal! gg0
+  call writable_search#cursor#Push()
+  normal! gg0
 
-    let header_pattern   = '^\S.*$'
-    let last_proxy_index = 0
-    let proxy_updates    = []
+  let header_pattern   = '^\S.*$'
+  let last_proxy_index = 0
+  let proxy_updates    = []
 
-    " Zip up proxies and their new line ranges
-    let header_lineno = search(header_pattern, 'Wc')
-    while header_lineno > 0
-      let header_line          = getline(header_lineno)
-      let previous_end_lineno  = header_lineno - 1
-      let current_start_lineno = header_lineno + 1
+  " Zip up proxies and their new line ranges
+  let header_lineno = search(header_pattern, 'Wc')
+  while header_lineno > 0
+    let header_line          = getline(header_lineno)
+    let previous_end_lineno  = header_lineno - 1
+    let current_start_lineno = header_lineno + 1
 
-      if len(b:proxies) <= last_proxy_index
-        echoerr "Number of patches doesn't add up"
-        return
-      endif
-
-      if len(proxy_updates) > 0
-        let proxy_updates[-1].local_end = previous_end_lineno
-      endif
-
-      let [_, filename, start_line, end_line; rest] = matchlist(header_line, '\v^(.*):(\d+)-(\d+)')
-
-      call add(proxy_updates, {
-            \ 'proxy':       b:proxies[last_proxy_index],
-            \ 'local_start': current_start_lineno,
-            \ 'local_end':   -1,
-            \ 'filename':    filename,
-            \ 'start_line':  str2nr(start_line),
-            \ 'end_line':    str2nr(end_line),
-            \ })
-      let last_proxy_index += 1
-
-      " Jump to the next line for the next search
-      exe current_start_lineno
-      let header_lineno = search(header_pattern, 'Wc')
-    endwhile
-
-    " Update last proxy
-    if len(proxy_updates) > 0
-      let proxy_updates[-1].local_end = line('$')
-    endif
-
-    " Validate that we've got all the proxies and their new lines
-    if len(proxy_updates) != len(b:proxies)
+    if len(b:proxies) <= last_proxy_index
       echoerr "Number of patches doesn't add up"
       return
     endif
 
-    for proxy_update in proxy_updates
-      if proxy_update.local_end < 0
-        echoerr "Error parsing update"
-        return
-      endif
+    if len(proxy_updates) > 0
+      let proxy_updates[-1].local_end = previous_end_lineno
+    endif
+
+    let [_, filename, start_line, end_line; rest] = matchlist(header_line, '\v^(.*):(\d+)-(\d+)')
+
+    call add(proxy_updates, {
+          \ 'proxy':       b:proxies[last_proxy_index],
+          \ 'local_start': current_start_lineno,
+          \ 'local_end':   -1,
+          \ 'filename':    filename,
+          \ 'start_line':  str2nr(start_line),
+          \ 'end_line':    str2nr(end_line),
+          \ })
+    let last_proxy_index += 1
+
+    " Jump to the next line for the next search
+    exe current_start_lineno
+    let header_lineno = search(header_pattern, 'Wc')
+  endwhile
+
+  " Update last proxy
+  if len(proxy_updates) > 0
+    let proxy_updates[-1].local_end = line('$')
+  endif
+
+  " Validate that we've got all the proxies and their new lines
+  if len(proxy_updates) != len(b:proxies)
+    echoerr "Number of patches doesn't add up"
+    return
+  endif
+
+  for proxy_update in proxy_updates
+    if proxy_update.local_end < 0
+      echoerr "Error parsing update"
+      return
+    endif
+  endfor
+
+  " Keep a dictionary of changed line counts per filename
+  let deltas = {}
+
+  " Keep a dictionary of changed file names
+  let renames = {}
+
+  " Perform actual update
+  for proxy_update in proxy_updates
+    let proxy = proxy_update.proxy
+
+    " adjust for any renames
+    if has_key(renames, proxy.filename)
+      let proxy.filename = renames[proxy.filename]
+    endif
+
+    " collect new lines, removing first whitespace char from view
+    let new_lines = []
+    for line in getbufline('%', proxy_update.local_start, proxy_update.local_end)
+      call add(new_lines, line[1:])
     endfor
 
-    " Keep a dictionary of changed line counts per filename
-    let deltas = {}
+    if !has_key(deltas, proxy.filename)
+      let deltas[proxy.filename] = 0
+    endif
+    let deltas[proxy.filename] += proxy.UpdateSource(new_lines, deltas[proxy.filename])
 
-    " Perform actual update
-    for proxy_update in proxy_updates
-      let proxy = proxy_update.proxy
+    let proxy.start_line = proxy_update.start_line
+    let proxy.end_line   = proxy_update.end_line
 
-      " collect new lines, removing first whitespace char from view
-      let new_lines = []
-      for line in getbufline('%', proxy_update.local_start, proxy_update.local_end)
-        call add(new_lines, line[1:])
-      endfor
-
-      if !has_key(deltas, proxy.filename)
-        let deltas[proxy.filename] = 0
-      endif
-      let deltas[proxy.filename] += proxy.UpdateSource(new_lines, deltas[proxy.filename])
-
-      let proxy.start_line = proxy_update.start_line
-      let proxy.end_line   = proxy_update.end_line
-
-      if proxy_update.filename != proxy.filename
-        if g:writable_search_confirm_file_rename
-          if confirm(printf('Rename "%s" to "%s"?', proxy.filename, proxy_update.filename))
-            call proxy.RenameFile(proxy_update.filename)
-          endif
-        else
+    if proxy_update.filename != proxy.filename
+      if g:writable_search_confirm_file_rename
+        if confirm(printf('Rename "%s" to "%s"?', proxy.filename, proxy_update.filename))
+          let renames[proxy.filename] = proxy_update.filename
           call proxy.RenameFile(proxy_update.filename)
         endif
+      else
+        let renames[proxy.filename] = proxy_update.filename
+        call proxy.RenameFile(proxy_update.filename)
       endif
+    endif
 
-      call proxy.UpdateLocal()
-    endfor
+    call proxy.UpdateLocal()
+  endfor
 
-    " Re-render to make changes visible
-    call writable_search#Render()
-    set nomodified
-  finally
-    call writable_search#cursor#Pop()
-  endtry
+  " Re-render to make changes visible
+  call writable_search#Render()
+  set nomodified
+
+  call writable_search#cursor#Pop()
 endfunction
 
 function! writable_search#Render()

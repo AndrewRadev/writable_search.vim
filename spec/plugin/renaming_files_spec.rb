@@ -20,6 +20,25 @@ describe "Renaming files" do
     IO.read('three.txt').strip.should eq 'Two'
   end
 
+  it "can handle two renames of a single file" do
+    write_file 'one.txt', "One\nOne"
+
+    vim.set_buffer_contents normalize_string_indent(<<-EOF)
+      one.txt:1:One
+      --
+      one.txt:2:One
+    EOF
+    vim.command 'call writable_search#Parse()'
+
+    vim.command '%s/one.txt/two.txt/g'
+    vim.command '%s/One/Two/g'
+
+    vim.write
+
+    IO.read('two.txt').strip.should eq "Two\nTwo"
+    File.exists?('one.txt').should be_false
+  end
+
   it "can move files to new directories" do
     FileUtils.mkdir('dir')
     write_file 'dir/one.txt', 'One'
