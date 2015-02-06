@@ -9,8 +9,10 @@ and performs a grep (or ack, or a different search command -- see the
 
 
 ``` vim
-:WritableSearch function_call\(
+:WritableSearch Server
 ```
+
+![screenshot](http://i.andrewradev.com/dd454391f2105569cd90006aa5638c80.png)
 
 The results are opened in a new tab (by default), and are very similar to what
 you would get from performing the search on the command-line. The difference is
