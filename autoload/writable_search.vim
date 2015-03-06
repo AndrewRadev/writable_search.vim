@@ -33,12 +33,17 @@ function! writable_search#Start(query, count)
 endfunction
 
 function! writable_search#Parse()
-  let b:proxies = writable_search#parser#Run()
+  let proxies = writable_search#parser#Run()
 
-  if empty(b:proxies)
+  if empty(proxies)
     echomsg "No results"
     return
   endif
+
+  if &filetype == 'qf'
+    call s:NewBuffer()
+  endif
+  let b:proxies = proxies
 
   call writable_search#Render()
 

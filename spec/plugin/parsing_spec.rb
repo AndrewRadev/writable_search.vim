@@ -61,4 +61,23 @@ describe "Parsing" do
            let current_proxy.filename = s:FindFilename(lines)
     EOF
   end
+
+  it "parses quickfix window results" do
+    write_file 'grep_results', <<-EOF
+      autoload/writable_search/proxy.vim:27:function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
+      autoload/writable_search/parser.vim:1:function! writable_search#parser#Run()
+    EOF
+
+    vim.edit 'grep_results'
+    vim.command 'cbuffer'
+    vim.command 'copen'
+    vim.command 'call writable_search#Parse()'
+
+    vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
+      autoload/writable_search/proxy.vim:27-27
+       function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
+      autoload/writable_search/parser.vim:1-1
+       function! writable_search#parser#Run()
+    EOF
+  end
 end
