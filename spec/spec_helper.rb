@@ -1,6 +1,12 @@
 require 'vimrunner'
 require 'vimrunner/rspec'
 
+RSpec.configure do |config|
+  config.expect_with(:rspec) do |expect|
+    expect.syntax = :should
+  end
+end
+
 Vimrunner::RSpec.configure do |config|
   config.reuse_server = true
 
