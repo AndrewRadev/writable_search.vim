@@ -13,6 +13,6 @@ describe "Updating from source" do
 
     vim.write
 
-    expect(vim.buffer_contents).to include 'One Foo Three'
+    vim.buffer_contents.should include 'One Foo Three'
   end
 end

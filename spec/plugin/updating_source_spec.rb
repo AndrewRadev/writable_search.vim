@@ -15,8 +15,8 @@ describe "Updating source" do
     vim.command '%s/Two/Foo/g'
     vim.write
 
-    expect(IO.read('one.txt').strip).to eq 'One Foo Three'
-    expect(IO.read('two.txt').strip).to eq 'Foo Three Four'
+    IO.read('one.txt').strip.should eq 'One Foo Three'
+    IO.read('two.txt').strip.should eq 'Foo Three Four'
   end
 
   it "updates two instances of the same file correctly" do
@@ -38,6 +38,6 @@ describe "Updating source" do
 
     vim.write
 
-    expect(IO.read('one.txt').strip).to eq "One\nTwo\nThree\nFive"
+    IO.read('one.txt').strip.should eq "One\nTwo\nThree\nFive"
   end
 end
