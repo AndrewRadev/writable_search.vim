@@ -12,10 +12,10 @@ describe "Searching" do
     vim.command 'WritableSearch Two'
 
     vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
-      two.txt:1-1
-       Two Three Four
       one.txt:1-1
        One Two Three
+      two.txt:1-1
+       Two Three Four
     EOF
   end
 
