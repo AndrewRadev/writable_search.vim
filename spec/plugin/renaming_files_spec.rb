@@ -10,9 +10,9 @@ describe "Renaming files" do
     vim.command '%s/two.txt/three.txt/g'
     vim.write
 
-    IO.read('one.txt').strip.should eq 'One Two'
-    File.exists?('two.txt').should eq false
-    IO.read('three.txt').strip.should eq 'Two'
+    expect(IO.read('one.txt').strip).to eq 'One Two'
+    expect(File.exists?('two.txt')).to eq false
+    expect(IO.read('three.txt').strip).to eq 'Two'
   end
 
   it "can handle two renames of a single file" do
@@ -24,8 +24,8 @@ describe "Renaming files" do
 
     vim.write
 
-    IO.read('two.txt').strip.should eq "Two\nTwo"
-    File.exists?('one.txt').should eq false
+    expect(IO.read('two.txt').strip).to eq "Two\nTwo"
+    expect(File.exists?('one.txt')).to eq false
   end
 
   it "can move files to new directories" do
@@ -38,8 +38,8 @@ describe "Renaming files" do
     vim.command '%s?dir/two.txt?other_dir/three.txt?g'
     vim.write
 
-    IO.read('dir/one.txt').strip.should eq 'One Two'
-    File.exists?('dir/two.txt').should eq false
-    IO.read('other_dir/three.txt').strip.should eq 'Two'
+    expect(IO.read('dir/one.txt').strip).to eq 'One Two'
+    expect(File.exists?('dir/two.txt')).to eq false
+    expect(IO.read('other_dir/three.txt').strip).to eq 'Two'
   end
 end

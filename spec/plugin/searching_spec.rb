@@ -11,7 +11,7 @@ describe "Searching" do
 
     vim.command 'WritableSearch Two'
 
-    vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
+    expect(vim.buffer_contents).to eq normalize_string_indent(<<-EOF)
       one.txt:1-1
        One Two Three
       two.txt:1-1
@@ -31,14 +31,14 @@ describe "Searching" do
     vim.command 'WritableSearch One'
 
     vim.command 'Rerun -C1'
-    vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
+    expect(vim.buffer_contents).to eq normalize_string_indent(<<-EOF)
       one.txt:1-2
        One
        Two
     EOF
 
     vim.command 'Rerun -C5'
-    vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
+    expect(vim.buffer_contents).to eq normalize_string_indent(<<-EOF)
       one.txt:1-5
        One
        Two
@@ -54,7 +54,7 @@ describe "Searching" do
 
     vim.command 'WritableSearch One'
 
-    vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
+    expect(vim.buffer_contents).to eq normalize_string_indent(<<-EOF)
       one.txt:1-1
        One
     EOF
