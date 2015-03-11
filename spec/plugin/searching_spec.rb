@@ -11,9 +11,12 @@ describe "Searching" do
 
     vim.command 'WritableSearch Two'
 
-    expect(vim.buffer_contents).to eq normalize_string_indent(<<-EOF)
+    expect(vim.buffer_contents).to include normalize_string_indent(<<-EOF)
       one.txt:1-1
        One Two Three
+    EOF
+
+    expect(vim.buffer_contents).to include normalize_string_indent(<<-EOF)
       two.txt:1-1
        Two Three Four
     EOF
