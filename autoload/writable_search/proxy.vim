@@ -43,7 +43,7 @@ function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
   let saved_bufhidden = &bufhidden
   let &bufhidden = 'hide'
 
-  exe 'silent edit ' . self.filename
+  exe 'silent edit ' . fnameescape(self.filename)
   setlocal nofoldenable
 
   call cursor(self.start_line, 1)
@@ -72,7 +72,7 @@ function! writable_search#proxy#UpdateLocal() dict
   let saved_bufhidden = &bufhidden
   let &bufhidden = 'hide'
 
-  exe 'silent edit ' . self.filename
+  exe 'silent edit ' . fnameescape(self.filename)
   setlocal nofoldenable
 
   let self.lines = getbufline('%', self.start_line, self.end_line)
