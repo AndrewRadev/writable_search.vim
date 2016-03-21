@@ -25,7 +25,6 @@ function! writable_search#Start(query, count)
   if g:writable_search_highlight != ''
     if exists('b:query_highlight_id')
       try
-        echomsg b:query_highlight_id
         call matchdelete(b:query_highlight_id)
       catch /:E803:/
         " The match with this ID doesn't exist for some reason, nevermind
