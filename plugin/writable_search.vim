@@ -46,6 +46,7 @@ if !exists('g:writable_search_highlight')
 endif
 
 command! -count=0 -nargs=* WritableSearch call writable_search#Start(<q-args>, <count>)
+command! WritableSearchFromQuickfix call writable_search#quickfix#Start()
 
 let &cpo = s:keepcpo
 unlet s:keepcpo
