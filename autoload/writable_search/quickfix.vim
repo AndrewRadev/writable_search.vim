@@ -26,6 +26,8 @@ function! writable_search#quickfix#Start()
 
   let proxies = []
 
+  call writable_search#InitBuffer()
+
   for filename in ordered_filenames
     let segments = file_lines[filename]
     let file_contents = readfile(filename)
@@ -41,7 +43,7 @@ function! writable_search#quickfix#Start()
         let end_index = len(file_contents) - 1
       endif
 
-      let current_proxy = writable_search#proxy#New(bufnr(filename))
+      let current_proxy = writable_search#proxy#New(bufnr('%'))
 
       let current_proxy.filename   = filename
       let current_proxy.lines      = file_contents[start_index:end_index]
@@ -52,9 +54,11 @@ function! writable_search#quickfix#Start()
     endfor
   endfor
 
-  tabnew
   let b:proxies = proxies
   call writable_search#Render()
+
+  set nomodified
+  set filetype=writable_search
 endfunction
 
 " Given a list of [start, end] pairs, merges pairs whose contexts overlap

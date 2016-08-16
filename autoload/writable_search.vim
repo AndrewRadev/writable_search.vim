@@ -16,23 +16,11 @@ function! writable_search#Start(query, count)
     return
   endif
 
-  if expand('%') != '' && &filetype != 'writable_search'
-    call s:NewBuffer()
-  endif
+  call writable_search#InitBuffer()
 
   silent call s:Grep(query)
 
-  if g:writable_search_highlight != ''
-    if exists('b:query_highlight_id')
-      try
-        call matchdelete(b:query_highlight_id)
-      catch /:E803:/
-        " The match with this ID doesn't exist for some reason, nevermind
-      endtry
-    endif
-    let b:query_highlight_id = matchadd(g:writable_search_highlight, '^\s.*\zs'.query, 0)
-  endif
-
+  call writable_search#Highlight(query)
   call writable_search#Parse()
 endfunction
 
@@ -205,10 +193,6 @@ function! writable_search#ProxyUnderCursor()
   return b:proxies[last_proxy_index]
 endfunction
 
-function! s:NewBuffer()
-  exe g:writable_search_new_buffer_command
-endfunction
-
 function! s:Grep(query)
   if g:writable_search_command_type != ''
     let b:command = writable_search#command#New(g:writable_search_command_type, a:query)
@@ -253,4 +237,25 @@ function! s:LastSelectedText()
   call setpos('.', saved_cursor)
 
   return text
+endfunction
+
+function! writable_search#Highlight(query)
+  let query = a:query
+
+  if g:writable_search_highlight != ''
+    if exists('b:query_highlight_id')
+      try
+        call matchdelete(b:query_highlight_id)
+      catch /:E803:/
+        " The match with this ID doesn't exist for some reason, nevermind
+      endtry
+    endif
+    let b:query_highlight_id = matchadd(g:writable_search_highlight, '^\s.*\zs'.query, 0)
+  endif
+endfunction
+
+function! writable_search#InitBuffer()
+  if &filetype != 'writable_search'
+    exe g:writable_search_new_buffer_command
+  endif
 endfunction
