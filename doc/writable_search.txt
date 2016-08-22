@@ -86,6 +86,20 @@ word under the cursor and search for that. If you call it while having marked
 something in visual mode (with `:'<,'>WritableSearch`), it will use the
 current visual selection as the search query.
 
+                                                  *:WritableSearchFromQuickfix*
+Quickfix support ~
+
+If you've already run any form of grep with the results loaded in the quickfix
+window, you can easily create a WritableSearch buffer with the contents of the
+quickfix list by running the |:WritableSearchFromQuickfix| command.
+
+If you do this often, you might want to create a buffer-local mapping for
+quickfix buffers by editing the file `ftplugin/qf.vim` and creating the
+mapping like so:
+>
+    nnoremap <buffer> <leader>ws :WritableSearchFromQuickfix
+<
+
 Important ~
 
     - Notice that each piece of code has been indented with a single extra
