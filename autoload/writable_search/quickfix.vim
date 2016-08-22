@@ -17,8 +17,7 @@ function! writable_search#quickfix#Start()
     call add(file_lines[filename], [start, end])
   endfor
 
-  " TODO (2016-08-15) Vim version?
-  call uniq(ordered_filenames)
+  let ordered_filenames = s:Uniq(ordered_filenames)
 
   for [filename, segments] in items(file_lines)
     let file_lines[filename] = s:MergeLineSegments(segments)
@@ -96,4 +95,16 @@ function! s:MergeLineSegments(segments)
   endwhile
 
   return merged_segments
+endfunction
+
+function! s:Uniq(list)
+  if exists('*uniq')
+    return uniq(a:list)
+  else
+    let index = {}
+    for entry in a:list
+      let index[entry] = 1
+    endfor
+    return sort(keys(index))
+  endif
 endfunction
