@@ -58,6 +58,16 @@ function! s:FilterBlanks(lines)
 endfunction
 
 function! s:BuildProxies(grouped_lines)
+  if &filetype == 'qf'
+    let proxies = s:BuildProxiesFromQuickfix()
+  else
+    let proxies = s:BuildProxiesFromBuffer(a:grouped_lines)
+  endif
+
+  return proxies
+endfunction
+
+function! s:BuildProxiesFromBuffer(grouped_lines)
   let proxies = []
 
   for lines in a:grouped_lines
@@ -95,6 +105,23 @@ function! s:BuildProxies(grouped_lines)
     let current_proxy.start_line = min(line_numbers)
     let current_proxy.end_line   = max(line_numbers)
 
+    call add(proxies, current_proxy)
+  endfor
+
+  return proxies
+endfunction
+
+function! s:BuildProxiesFromQuickfix()
+  let proxies = []
+  let quickfix_list = getqflist()
+
+  for location in quickfix_list
+    let current_proxy = writable_search#proxy#New(location.bufnr)
+    let current_proxy.filename = bufname(location.bufnr)
+    let current_proxy.start_line = location.lnum
+    let current_proxy.end_line = location.lnum
+
+    call add(current_proxy.lines, location.text)
     call add(proxies, current_proxy)
   endfor
 
