@@ -9,10 +9,7 @@ else
   silent file WritableSearch
 endif
 
-augroup writable_search
-  autocmd!
-  autocmd BufWriteCmd <buffer> call writable_search#Update()
-augroup END
+autocmd BufWriteCmd <buffer> call writable_search#Update()
 
 if g:writable_search_result_buffer_utilities
   command! -buffer -nargs=* Rerun call writable_search#Rerun(<q-args>)
