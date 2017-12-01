@@ -30,7 +30,7 @@ function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
   let new_lines = a:new_lines
 
   " don't do anything if there was no change
-  if new_lines == self.lines
+  if new_lines ==# self.lines
     return 0
   endif
 
