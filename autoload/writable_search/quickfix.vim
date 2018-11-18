@@ -17,7 +17,7 @@ function! writable_search#quickfix#Start()
     call add(file_lines[filename], [start, end])
   endfor
 
-  let ordered_filenames = s:Uniq(ordered_filenames)
+  let ordered_filenames = s:SortUniq(ordered_filenames)
 
   for [filename, segments] in items(file_lines)
     let file_lines[filename] = s:MergeLineSegments(segments)
@@ -64,6 +64,7 @@ endfunction
 function! s:MergeLineSegments(segments)
   let i = 0
   let segments = a:segments
+  call sort(segments)
   let merged_segments = []
 
   while i < len(segments)
@@ -97,9 +98,9 @@ function! s:MergeLineSegments(segments)
   return merged_segments
 endfunction
 
-function! s:Uniq(list)
+function! s:SortUniq(list)
   if exists('*uniq')
-    return uniq(a:list)
+    return uniq(sort(copy(a:list)))
   else
     let index = {}
     for entry in a:list
