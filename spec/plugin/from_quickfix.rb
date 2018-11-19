@@ -18,4 +18,17 @@ describe "From Quickfix" do
        Two Three Four
     EOF
   end
+
+  it "handles quickfix results in the same file" do
+    write_file 'one.txt', "One Two Three\nTwo Three Four"
+
+    vim.command 'vimgrep /Two/ * '
+    vim.command 'WritableSearchFromQuickfix'
+
+    vim.buffer_contents.should include normalize_string_indent(<<-EOF)
+      one.txt:1-2
+       One Two Three
+       Two Three Four
+    EOF
+  end
 end
