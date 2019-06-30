@@ -45,7 +45,7 @@ if !exists('g:writable_search_highlight')
   let g:writable_search_highlight = 'Operator'
 endif
 
-command! -count=0 -nargs=* WritableSearch call writable_search#Start(<q-args>, <count>)
+command! -range=0 -nargs=* WritableSearch call writable_search#Start(<q-args>, <count>)
 command! WritableSearchFromQuickfix call writable_search#quickfix#Start()
 
 let &cpo = s:keepcpo
