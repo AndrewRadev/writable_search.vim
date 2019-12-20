@@ -64,7 +64,7 @@ endfunction
 function! s:MergeLineSegments(segments)
   let i = 0
   let segments = a:segments
-  call sort(segments)
+  call sort(segments, 'n')
   let merged_segments = []
 
   while i < len(segments)

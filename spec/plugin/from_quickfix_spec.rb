@@ -31,4 +31,22 @@ describe "From Quickfix" do
        Two Three Four
     EOF
   end
+
+  it "doesn't do string comparison for lines" do
+    write_file 'one.txt', "One Two Three#{"\n" * 5}Two Three Four#{"\n" * 8}Five Two Six"
+
+    vim.command 'vimgrep /Two/ * '
+    vim.command 'WritableSearchFromQuickfix'
+
+    expected_nonblank = <<~EOF.strip
+      one.txt:1-9
+       One Two Three
+       Two Three Four
+      one.txt:11-14
+       Five Two Six
+    EOF
+    actual_nonblank = vim.buffer_contents.split("\n").grep(/\S/).join("\n")
+
+    actual_nonblank.should eq expected_nonblank
+  end
 end
