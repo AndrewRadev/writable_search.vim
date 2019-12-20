@@ -8,12 +8,12 @@ describe "From Quickfix" do
     vim.command 'vimgrep /Two/ * '
     vim.command 'WritableSearchFromQuickfix'
 
-    vim.buffer_contents.should include <<~EOF.strip
+    expect(vim.buffer_contents).to include <<~EOF.strip
       one.txt:1-1
        One Two Three
     EOF
 
-    vim.buffer_contents.should include <<~EOF.strip
+    expect(vim.buffer_contents).to include <<~EOF.strip
       two.txt:1-1
        Two Three Four
     EOF
@@ -25,7 +25,7 @@ describe "From Quickfix" do
     vim.command 'vimgrep /Two/ * '
     vim.command 'WritableSearchFromQuickfix'
 
-    vim.buffer_contents.should include <<~EOF.strip
+    expect(vim.buffer_contents).to include <<~EOF.strip
       one.txt:1-2
        One Two Three
        Two Three Four
@@ -47,6 +47,6 @@ describe "From Quickfix" do
     EOF
     actual_nonblank = vim.buffer_contents.split("\n").grep(/\S/).join("\n")
 
-    actual_nonblank.should eq expected_nonblank
+    expect(actual_nonblank).to eq expected_nonblank
   end
 end
