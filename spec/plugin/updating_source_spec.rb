@@ -5,7 +5,7 @@ describe "Updating source" do
     write_file 'one.txt', 'One Two Three'
     write_file 'two.txt', 'Two Three Four'
 
-    vim.set_buffer_contents normalize_string_indent(<<-EOF)
+    vim.set_buffer_contents <<~EOF
       one.txt:1:One Two Three
       --
       two.txt:1:Two Three Four
@@ -20,12 +20,12 @@ describe "Updating source" do
   end
 
   it "updates two instances of the same file correctly" do
-    write_file 'one.txt', <<-EOF
+    write_file 'one.txt', <<~EOF
       One Two Three
       Four
     EOF
 
-    vim.set_buffer_contents normalize_string_indent(<<-EOF)
+    vim.set_buffer_contents <<~EOF
       one.txt:1:One Two Three
       --
       one.txt:2:Four

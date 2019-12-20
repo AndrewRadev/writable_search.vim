@@ -8,12 +8,12 @@ describe "From Quickfix" do
     vim.command 'vimgrep /Two/ * '
     vim.command 'WritableSearchFromQuickfix'
 
-    vim.buffer_contents.should include normalize_string_indent(<<-EOF)
+    vim.buffer_contents.should include <<~EOF.strip
       one.txt:1-1
        One Two Three
     EOF
 
-    vim.buffer_contents.should include normalize_string_indent(<<-EOF)
+    vim.buffer_contents.should include <<~EOF.strip
       two.txt:1-1
        Two Three Four
     EOF
@@ -25,7 +25,7 @@ describe "From Quickfix" do
     vim.command 'vimgrep /Two/ * '
     vim.command 'WritableSearchFromQuickfix'
 
-    vim.buffer_contents.should include normalize_string_indent(<<-EOF)
+    vim.buffer_contents.should include <<~EOF.strip
       one.txt:1-2
        One Two Three
        Two Three Four

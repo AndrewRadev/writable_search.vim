@@ -11,19 +11,19 @@ describe "Searching" do
 
     vim.command 'WritableSearch Two'
 
-    vim.buffer_contents.should include normalize_string_indent(<<-EOF)
+    vim.buffer_contents.should include <<~EOF.strip
       one.txt:1-1
        One Two Three
     EOF
 
-    vim.buffer_contents.should include normalize_string_indent(<<-EOF)
+    vim.buffer_contents.should include <<~EOF.strip
       two.txt:1-1
        Two Three Four
     EOF
   end
 
   it "can rerun a query with different flags" do
-    write_file 'one.txt', <<-EOF
+    write_file 'one.txt', <<~EOF.strip
       One
       Two
       Three
@@ -34,14 +34,14 @@ describe "Searching" do
     vim.command 'WritableSearch One'
 
     vim.command 'Rerun -C1'
-    vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
+    vim.buffer_contents.should eq <<~EOF.strip
       one.txt:1-2
        One
        Two
     EOF
 
     vim.command 'Rerun -C5'
-    vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
+    vim.buffer_contents.should eq <<~EOF.strip
       one.txt:1-5
        One
        Two
@@ -57,7 +57,7 @@ describe "Searching" do
 
     vim.command 'WritableSearch One'
 
-    vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
+    vim.buffer_contents.should eq <<~EOF.strip
       one.txt:1-1
        One
     EOF

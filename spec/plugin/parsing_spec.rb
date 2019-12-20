@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "Parsing" do
   it "parses grep results into a different representation (separated by dashes)" do
-    write_file 'grep_results', <<-EOF
+    write_file 'grep_results', <<~EOF
       autoload/writable_search/proxy.vim-26-" to adjust next proxies.
       autoload/writable_search/proxy.vim:27:function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
       autoload/writable_search/proxy.vim-28-  let new_lines = a:new_lines
@@ -18,7 +18,7 @@ describe "Parsing" do
     vim.edit 'grep_results'
     vim.command 'call writable_search#Parse()'
 
-    vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
+    vim.buffer_contents.should eq <<~EOF.strip
       autoload/writable_search/proxy.vim:26-28
        " to adjust next proxies.
        function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
@@ -34,7 +34,7 @@ describe "Parsing" do
   end
 
   it "parses grep results into a different representation (no dashes)" do
-    write_file 'grep_results', <<-EOF
+    write_file 'grep_results', <<~EOF
       autoload/writable_search/proxy.vim-26-" to adjust next proxies.
       autoload/writable_search/proxy.vim:27:function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
       autoload/writable_search/proxy.vim-28-  let new_lines = a:new_lines
@@ -47,7 +47,7 @@ describe "Parsing" do
 
     vim.edit 'grep_results'
     vim.command 'call writable_search#Parse()'
-    vim.buffer_contents.should eq normalize_string_indent(<<-EOF)
+    vim.buffer_contents.should eq <<~EOF.strip
       autoload/writable_search/proxy.vim:26-28
        " to adjust next proxies.
        function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
