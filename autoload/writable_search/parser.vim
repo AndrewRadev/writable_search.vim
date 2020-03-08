@@ -19,10 +19,11 @@ function! s:PartitionLines(lines, file_parser)
     return []
   endif
 
-  let groups           = []
-  let current_group    = []
-  let current_filename = file_parser.FindFilename([lines[0]])
-  let last_lineno      = -1
+  let groups        = []
+  let current_group = []
+  let last_lineno   = -1
+
+  let [current_filename, _] = file_parser.ParseLine(lines[0])
 
   for line in lines
     if line =~ '^--$'
@@ -34,11 +35,15 @@ function! s:PartitionLines(lines, file_parser)
       let last_lineno = -1
 
       continue
-    elseif current_filename != '' && current_filename != file_parser.FindFilename([line])
+    endif
+
+    let [new_filename, new_lineno] = file_parser.ParseLine(line)
+
+    if current_filename != '' && current_filename != new_filename
       " then we're starting a new file, new group
       call add(groups, current_group)
       let current_group = []
-    elseif last_lineno > 0 && abs(last_lineno - s:FindLineno(line)) > 1
+    elseif last_lineno > 0 && abs(last_lineno - new_lineno) > 1
       " then we have a line number jump, new group
       call add(groups, current_group)
       let current_group = []
@@ -48,8 +53,7 @@ function! s:PartitionLines(lines, file_parser)
 
     call add(current_group, line)
 
-    let current_filename = file_parser.FindFilename([line])
-    let last_lineno      = s:FindLineno(line)
+    let [current_filename, last_lineno] = file_parser.ParseLine(line)
   endfor
 
   call add(groups, current_group)
