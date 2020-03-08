@@ -6,21 +6,25 @@ function! writable_search#parser#Run()
     return []
   endif
 
-  let grouped_lines = s:PartitionLines(lines)
-  return s:BuildProxies(grouped_lines)
+  let file_parser = writable_search#file_parser#New()
+  let grouped_lines = s:PartitionLines(lines, file_parser)
+  return s:BuildProxies(grouped_lines, file_parser)
 endfunction
 
-function! s:PartitionLines(lines)
-  if empty(a:lines)
+function! s:PartitionLines(lines, file_parser)
+  let lines       = a:lines
+  let file_parser = a:file_parser
+
+  if empty(lines)
     return []
   endif
 
   let groups           = []
   let current_group    = []
-  let current_filename = s:FindFilename([a:lines[0]])
+  let current_filename = file_parser.FindFilename([lines[0]])
   let last_lineno      = -1
 
-  for line in a:lines
+  for line in lines
     if line =~ '^--$'
       " then we definitely have a new group
       call add(groups, current_group)
@@ -30,7 +34,7 @@ function! s:PartitionLines(lines)
       let last_lineno = -1
 
       continue
-    elseif current_filename != '' && current_filename != s:FindFilename([line])
+    elseif current_filename != '' && current_filename != file_parser.FindFilename([line])
       " then we're starting a new file, new group
       call add(groups, current_group)
       let current_group = []
@@ -44,7 +48,7 @@ function! s:PartitionLines(lines)
 
     call add(current_group, line)
 
-    let current_filename = s:FindFilename([line])
+    let current_filename = file_parser.FindFilename([line])
     let last_lineno      = s:FindLineno(line)
   endfor
 
@@ -57,12 +61,15 @@ function! s:FilterBlanks(lines)
   return filter(a:lines, 'v:val !~ "^\\s*$"')
 endfunction
 
-function! s:BuildProxies(grouped_lines)
+function! s:BuildProxies(grouped_lines, file_parser)
+  let grouped_lines = a:grouped_lines
+  let file_parser   = a:file_parser
+
   let proxies = []
 
-  for lines in a:grouped_lines
+  for lines in grouped_lines
     let current_proxy = writable_search#proxy#New(bufnr('%'))
-    let raw_filename  = s:FindFilename(lines)
+    let raw_filename  = file_parser.FindFilename(lines)
 
     if raw_filename == ''
       echoerr "Couldn't parse the filename from: \n".string(lines)
@@ -99,18 +106,6 @@ function! s:BuildProxies(grouped_lines)
   endfor
 
   return proxies
-endfunction
-
-function! s:FindFilename(lines)
-  let filename_pattern = '^.\{-}\ze[:-]\d\+[:-].*'
-
-  for line in a:lines
-    if line =~ filename_pattern
-      return matchstr(line, filename_pattern)
-    endif
-  endfor
-
-  return ''
 endfunction
 
 function! s:FindLineno(line)
