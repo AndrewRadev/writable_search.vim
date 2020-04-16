@@ -16,6 +16,11 @@ function! writable_search#file_parser#ParseLine(line) dict
 
   for delimiter in ['-', ':']
     let parts = split(line, delimiter)
+    if len(parts) < 3 && line[len(line) - 1] == delimiter
+      " then the last part is empty
+      call add(parts, '')
+    endif
+
     if len(parts) < 3
       " we expect [filename, line_number, text], so less than 3 parts means
       " this is not a line we can parse, go on to the next delimiter

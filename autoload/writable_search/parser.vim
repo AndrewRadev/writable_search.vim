@@ -76,7 +76,7 @@ function! s:BuildProxies(grouped_lines, file_parser)
     let raw_filename  = file_parser.FindFilename(lines)
 
     if raw_filename == ''
-      echoerr "Couldn't parse the filename from: \n".string(lines)
+      echoerr "Couldn't parse the filename from: ".string(lines)
       return
     endif
 
