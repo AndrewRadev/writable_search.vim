@@ -16,8 +16,9 @@ function! writable_search#file_parser#ParseLine(line) dict
 
   for delimiter in ['-', ':']
     let parts = split(line, delimiter)
-    if len(parts) < 3 && line[len(line) - 1] == delimiter
-      " then the last part is empty
+    if line[len(line) - 1] == delimiter
+      " the line ended in a delimiter, so the split will end up one character
+      " short
       call add(parts, '')
     endif
 
