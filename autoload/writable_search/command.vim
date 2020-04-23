@@ -17,7 +17,12 @@ function! writable_search#command#Read() dict
     return
   endif
 
+  let saved_shellredir = &shellredir
+  let &shellredir = substitute(&shellredir, '\V2>&1', '', 'g')
+
   exe 'r!'.full_command
+
+  let &shellredir = saved_shellredir
 endfunction
 
 function! writable_search#command#String() dict
