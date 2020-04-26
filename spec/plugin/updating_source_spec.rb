@@ -40,4 +40,20 @@ describe "Updating source" do
 
     expect(IO.read('one.txt').strip).to eq "One\nTwo\nThree\nFive"
   end
+
+  it "updates an entire file correctly" do
+    write_file 'one.txt', <<~EOF
+      One Two Three
+    EOF
+
+    vim.set_buffer_contents <<~EOF
+      one.txt:1:One Two Three
+    EOF
+    vim.command 'call writable_search#Parse()'
+
+    vim.command '%s/One/Update/g'
+    vim.write
+
+    expect(IO.read('one.txt')).to eq "Update Two Three\n"
+  end
 end

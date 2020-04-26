@@ -47,10 +47,22 @@ function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
   setlocal nofoldenable
 
   call cursor(self.start_line, 1)
+  if self.start_line == 1 && self.end_line == line('$')
+    let entire_file = 1
+  else
+    let entire_file = 0
+  endif
+
   if self.end_line - self.start_line >= 0
     silent exe self.start_line . ',' . self.end_line . 'delete _'
   endif
   call append(self.start_line - 1, new_lines)
+
+  if entire_file
+    " then the append will end up adding an extra line, clean it up
+    $delete _
+  end
+
   silent write
   exe 'silent buffer ' . self.parent_buffer
 
