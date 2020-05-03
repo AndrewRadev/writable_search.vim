@@ -1,5 +1,5 @@
 setlocal buftype=acwrite
-setlocal bufhidden=wipe
+setlocal bufhidden=delete
 setlocal autoindent
 
 if exists('b:command')

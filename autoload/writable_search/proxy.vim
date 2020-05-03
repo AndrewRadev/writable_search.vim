@@ -64,7 +64,7 @@ function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
   end
 
   silent write
-  let &bufhidden = 'wipe'
+  let &bufhidden = 'delete'
   exe 'silent buffer ' . self.parent_buffer
 
   let &bufhidden = saved_bufhidden
@@ -90,7 +90,7 @@ function! writable_search#proxy#UpdateLocal() dict
 
   let self.lines = getbufline('%', self.start_line, self.end_line)
 
-  let &bufhidden = 'wipe'
+  let &bufhidden = 'delete'
   exe 'silent buffer ' . self.parent_buffer
 
   let &bufhidden = saved_bufhidden
