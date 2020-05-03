@@ -43,6 +43,12 @@ function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
   let saved_bufhidden = &bufhidden
   let &bufhidden = 'hide'
 
+  if buflisted(self.filename)
+    let temp_buffer = 0
+  else
+    let temp_buffer = 1
+  endif
+
   exe 'silent edit ' . fnameescape(self.filename)
   setlocal nofoldenable
 
@@ -64,7 +70,9 @@ function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
   end
 
   silent write
-  let &bufhidden = 'delete'
+  if temp_buffer
+    let &bufhidden = 'delete'
+  endif
   exe 'silent buffer ' . self.parent_buffer
 
   let &bufhidden = saved_bufhidden
@@ -75,7 +83,7 @@ function! writable_search#proxy#UpdateSource(new_lines, adjustment) dict
   let new_line_count = len(new_lines)
 
   let self.end_line = self.start_line + new_line_count - 1
-  let self.lines = new_lines " TODO (2013-05-26) Is self.lines necessary?
+  let self.lines = new_lines
 
   return new_line_count - old_line_count
 endfunction
@@ -85,12 +93,20 @@ function! writable_search#proxy#UpdateLocal() dict
   let saved_bufhidden = &bufhidden
   let &bufhidden = 'hide'
 
+  if buflisted(self.filename)
+    let temp_buffer = 0
+  else
+    let temp_buffer = 1
+  endif
+
   exe 'silent edit ' . fnameescape(self.filename)
   setlocal nofoldenable
 
   let self.lines = getbufline('%', self.start_line, self.end_line)
 
-  let &bufhidden = 'delete'
+  if temp_buffer
+    let &bufhidden = 'delete'
+  endif
   exe 'silent buffer ' . self.parent_buffer
 
   let &bufhidden = saved_bufhidden
