@@ -20,7 +20,8 @@ function! writable_search#command#Read() dict
   let saved_shellredir = &shellredir
   let &shellredir = substitute(&shellredir, '\V2>&1', '', 'g')
 
-  exe 'r!'.full_command
+  let output = systemlist(full_command)
+  call append(0, output)
 
   let &shellredir = saved_shellredir
 endfunction

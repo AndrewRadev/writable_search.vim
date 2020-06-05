@@ -45,7 +45,6 @@ function! writable_search#Rerun(...)
 
   %delete _
   call b:command.Read()
-  0delete _
 
   call writable_search#Parse()
 endfunction
@@ -221,7 +220,6 @@ function! s:Grep(query)
 
   %delete _
   call b:command.Read()
-  0delete _
 endfunction
 
 function! s:LastSelectedText()
