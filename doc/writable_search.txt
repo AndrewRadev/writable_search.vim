@@ -126,6 +126,7 @@ in their default ordering:
   variable and tries to re-use it. It may not work correctly depending on what
   you've set it to. It only works if the `g:ackprg` variable is detected.
 - `ack`, using the perl "ack" tool, only works if the tool is installed.
+- `rg` to use the "ripgrep" tool, only works if the tool is installed.
 - `egrep`, the last resort. Slow, but should always be present on a *nix system
 
 So, if you want to use only `ack.vim` and fall back to `egrep` if the `ack`
