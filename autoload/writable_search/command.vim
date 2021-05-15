@@ -40,6 +40,7 @@ function! writable_search#command#FullCommand() dict
   let git_grep_command = 'git grep -I -n -H %s %s'
   let ack_command      = 'ack %s --nogroup %s'
   let ag_command       = 'ag %s --nogroup %s'
+  let rg_command       = 'rg %s --no-column --vimgrep %s'
 
   if g:writable_search_context_lines
     let flags = '-C'.g:writable_search_context_lines
@@ -57,6 +58,8 @@ function! writable_search#command#FullCommand() dict
     let full_command = printf(ack_command, self.query, flags)
   elseif self.type == 'ag'
     let full_command = printf(ag_command, self.query, flags)
+  elseif self.type == 'rg'
+    let full_command = printf(rg_command, self.query, flags)
   elseif self.type == 'git-grep'
     let full_command = printf(git_grep_command, flags, self.query)
   elseif self.type == 'ack.vim'
@@ -83,6 +86,8 @@ function! writable_search#command#IsSupported() dict
     return s:ExecutableExists('ack')
   elseif self.type == 'egrep'
     return s:ExecutableExists('egrep')
+  elseif self.type == 'rg'
+    return s:ExecutableExists('rg')
   endif
 endfunction
 
